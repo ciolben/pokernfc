@@ -3,6 +3,7 @@ package ch.epfl.pokernfc;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -61,17 +62,19 @@ public class MainActivity extends ListActivity {
                 appActivities));
 		
 		//*********************setup nfc*********************
-		//j'ai mit pot at player en SingleTask, comme ça quand il y a un nouveau nfc,
-		//ça appelle onNewIntent sur pot (lire) ou player (écrire)
+		//j'ai mit pot at player en SingleTask, comme ï¿½a quand il y a un nouveau nfc,
+		//ï¿½a appelle onNewIntent sur pot (lire) ou player (ï¿½crire)
 		
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		
 		// Handle all the received NFC intents in the pot activity
+		
+		System.out.println("sddsddsddsdsds");
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
         // Intent filters for reading a note from a tag or exchanging over p2p.
-        IntentFilter ndefDetected = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        IntentFilter ndefDetected = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
         try {
             ndefDetected.addDataType("text/plain");
         } catch (MalformedMimeTypeException e) { }
@@ -94,5 +97,13 @@ public class MainActivity extends ListActivity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	@Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);//must store the new intent unless getIntent() will return the old one
+        System.out.println("dasadadlflkdsafkasldkflaskdfkalsdkfaldklfakdlkf");
+    }
+
 
 }
