@@ -1,4 +1,4 @@
-package ch.epfl.pokernfc;
+package ch.epfl.pokernfc.Utils;
 
 import java.io.IOException;
 

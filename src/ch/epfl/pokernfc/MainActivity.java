@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
+import android.content.res.Resources.Theme;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -69,7 +70,6 @@ public class MainActivity extends ListActivity {
 		
 		// Handle all the received NFC intents in the pot activity
 		
-		System.out.println("sddsddsddsdsds");
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
@@ -83,6 +83,9 @@ public class MainActivity extends ListActivity {
         // Intent filters for writing to a tag
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         writeTagFilters = new IntentFilter[] { tagDetected };
+        
+        System.out.println("ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+        //this.setTheme(android.R.style.Theme_NoDisplay);
 	}
 	
     @Override
