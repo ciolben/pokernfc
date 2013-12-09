@@ -1,5 +1,7 @@
 package ch.epfl.pokernfc;
 
+import ch.epfl.pokernfc.Logic.PokerObjects;
+import ch.epfl.pokernfc.Logic.Pot;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -9,14 +11,21 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 
-public class PotActivity extends Activity {
+public class PotActivity extends PokerActivity {
 
+	private Pot mPot;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pot);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		mPot = PokerObjects.getPot();
+		
+		//binding
+		bind("Pot");
 	}
 
 	@Override
@@ -58,6 +67,11 @@ public class PotActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onNFCIntent(Intent intent) {
+		System.out.println("POT NFC INTENT");
 	}
 
 }

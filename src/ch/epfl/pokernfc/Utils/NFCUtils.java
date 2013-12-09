@@ -66,17 +66,20 @@ public class NFCUtils {
         mNfcAdapter.disableForegroundNdefPush(activity);
     }
 
-    protected void callOnNewIntent(Activity activity, Intent intent) {
+    public static String callOnNewIntent(boolean writeMode, Intent intent, Activity activity, String message) {
         // NDEF exchange mode
-        if (!mWriteMode && NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+        if (!writeMode && NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
             NdefMessage[] msgs = getNdefMessages(intent);
+            return readNDEFmsg(msgs[0]);
         }
 
         // Tag writing mode
-        if (mWriteMode && NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+        if (writeMode && NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            writeTag(activity, getNoteAsNdef(), detectedTag);
+            writeTag(activity, getMessageAsNdef(message), detectedTag);
         }
+        
+        return null;
     }
 
     public void write(Activity activity) {
@@ -91,13 +94,13 @@ public class NFCUtils {
         
     }
 
-    public String readNDEFmsg (final NdefMessage msg) {
+    public static String readNDEFmsg (final NdefMessage msg) {
     	
     	return new String(msg.getRecords()[0].getPayload());
     }
 
-    public NdefMessage getNoteAsNdef() {
-        byte[] textBytes = mNote.getText().toString().getBytes();
+    public static NdefMessage getMessageAsNdef(String message) {
+        byte[] textBytes = message.getBytes();
         NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
                 new byte[] {}, textBytes);
         return new NdefMessage(new NdefRecord[] {
@@ -105,7 +108,7 @@ public class NFCUtils {
         });
     }
 
-    public NdefMessage[] getNdefMessages(Intent intent) {
+    public static NdefMessage[] getNdefMessages(Intent intent) {
         // Parse the intent
         NdefMessage[] msgs = null;
         String action = intent.getAction();
@@ -135,7 +138,7 @@ public class NFCUtils {
     }
 
     private void enableNdefExchangeMode(Activity activity) {
-        mNfcAdapter.enableForegroundNdefPush(activity, getNoteAsNdef());
+        mNfcAdapter.enableForegroundNdefPush(activity, getMessageAsNdef(""));
         mNfcAdapter.enableForegroundDispatch(activity, mNfcPendingIntent, mNdefExchangeFilters, null);
     }
 
@@ -158,7 +161,7 @@ public class NFCUtils {
         mNfcAdapter.disableForegroundDispatch(activity);
     }
 
-    boolean writeTag(Activity activity, NdefMessage message, Tag tag) {
+    public static boolean writeTag(Activity activity, NdefMessage message, Tag tag) {
         int size = message.toByteArray().length;
 
         try {
@@ -203,7 +206,7 @@ public class NFCUtils {
         return false;
     }
 
-    private void toast(Activity activity, String text) {
+    private static void toast(Activity activity, String text) {
         Toast.makeText(activity, text, Toast.LENGTH_SHORT).show();
     }
 }
