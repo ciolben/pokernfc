@@ -92,7 +92,9 @@ public class MainActivity extends ListActivity {
 //        writeTagFilters = new IntentFilter[] { tagDetected };
         
         System.out.println("ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
-
+        
+        Intent intent = new Intent(this, PokerNFCService.class);
+        startService(intent);
 	}
 	
     @Override

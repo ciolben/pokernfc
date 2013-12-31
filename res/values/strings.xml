@@ -12,5 +12,6 @@
     <string name="textview_potvalue">0 CHF</string>
     <string name="textview_cash">Cash :</string>
     <string name="textview_cashvalue">1000 CHF</string>
+    <string name="title_activity_activity_to_service">ActivityToService</string>
 
 </resources>

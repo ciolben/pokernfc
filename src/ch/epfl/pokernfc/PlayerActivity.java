@@ -27,7 +27,7 @@ public class PlayerActivity extends PokerActivity {
 		//Binding
 		bind("Player");
 	}
-
+	
 	@Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);

@@ -24,7 +24,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- <intent-filter>
+            <!--
+            <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
 
                 <meta-data
@@ -35,7 +36,8 @@
                 <action android:name="android.nfc.action.TAG_DISCOVERED" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter> -->
+            </intent-filter>
+            -->
         </activity>
         <activity
             android:name="ch.epfl.pokernfc.PotActivity"
@@ -56,12 +58,18 @@
                 android:value="ch.epfl.pokernfc.MainActivity" />
         </activity>
 
+        <!-- does not support intent for NFC -->
         <service
             android:name="ch.epfl.pokernfc.PokerNFCService"
             android:enabled="true"
             android:exported="false" >
-            
-            <intent-filter>
+        </service>
+
+        <!-- will bridge NFC requests to service -->
+        <activity
+            android:name="ch.epfl.pokernfc.ActivityToService"
+            android:label="@string/title_activity_activity_to_service" >
+             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
 
                 <meta-data
@@ -73,8 +81,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            
-        </service>
+        </activity>
     </application>
 
 </manifest>
