@@ -13,5 +13,7 @@
     <string name="textview_cash">Cash :</string>
     <string name="textview_cashvalue">1000 CHF</string>
     <string name="title_activity_activity_to_service">ActivityToService</string>
+    <string name="_10_">-10.-</string>
+    <string name="for_test">for test</string>
 
 </resources>

@@ -2,10 +2,12 @@ package ch.epfl.pokernfc;
 
 import ch.epfl.pokernfc.Logic.Player;
 import ch.epfl.pokernfc.Logic.PokerObjects;
+import ch.epfl.pokernfc.Utils.NFCUtils;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -70,8 +72,13 @@ public class PlayerActivity extends PokerActivity {
 	}
 
 	@Override
-	public void onNFCIntent(Intent intent) {
+	public void onNFCIntent(String nfcContent) {
 		System.out.println("PLAYER NFC INTENT");
 	}
 
+	public void onPayCash(View view) {
+		System.out.println("Player : PAY CASH");
+		
+		NFCUtils.write("Test");
+	}
 }

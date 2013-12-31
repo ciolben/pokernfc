@@ -8,7 +8,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 public abstract class PokerActivity extends Activity {
-	public abstract void onNFCIntent(Intent intent);
+	public abstract void onNFCIntent(String nfcContent);
     
    //shared fields
     protected PokerNFCBinder mBinder;

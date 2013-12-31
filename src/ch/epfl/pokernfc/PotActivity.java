@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -70,8 +71,10 @@ public class PotActivity extends PokerActivity {
 	}
 
 	@Override
-	public void onNFCIntent(Intent intent) {
+	public void onNFCIntent(String nfcContent) {
 		System.out.println("POT NFC INTENT");
+		
+		((TextView) findViewById(R.id.extraLabel)).setText(nfcContent);
 	}
 
 }

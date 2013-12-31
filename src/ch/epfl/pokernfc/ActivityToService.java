@@ -1,19 +1,28 @@
 package ch.epfl.pokernfc;
 
+import ch.epfl.pokernfc.Utils.NFCUtils;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.Menu;
 
+/**
+ * Started when an NFC is discovered
+ * @author Loic
+ *
+ */
 public class ActivityToService extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Context con = getApplicationContext();
-		Intent srv = new Intent(con, PokerNFCService.class);
-		con.startService(srv); //doesn't matter if started multiple times
+		
+		Intent intentForService = NFCUtils.reforgeIntentForService(getIntent(), con, PokerNFCService.class);
+		if (intentForService == null) { return; }
+		con.startService(intentForService); //doesn't matter if called multiple times
+		
 		finish();
 	}
 }
