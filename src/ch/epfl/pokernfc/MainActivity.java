@@ -1,5 +1,6 @@
 package ch.epfl.pokernfc;
 
+import ch.epfl.pokernfc.Utils.NFCUtils;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -75,6 +76,8 @@ public class MainActivity extends ListActivity {
 		
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		
+//		NFCUtils.setup(this);
+		
 		// Handle all the received NFC intents in the pot activity
 		
 //        nfcPendingIntent = PendingIntent.getActivity(this, 0,
@@ -115,6 +118,7 @@ public class MainActivity extends ListActivity {
         super.onNewIntent(intent);
         setIntent(intent);//must store the new intent unless getIntent() will return the old one
         System.out.println("dasadadlflkdsafkasldkflaskdfkalsdkfaldklfakdlkf");
+        
     }
     
 }

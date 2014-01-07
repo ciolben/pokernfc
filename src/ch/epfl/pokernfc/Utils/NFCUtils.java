@@ -28,21 +28,21 @@ public class NFCUtils {
     public static final String TAG = "NFC";
     public static final String NFC_EXTRA_TAG = "NFCTag";
 
-    private boolean mResumed = false;
-    private boolean mWriteMode = false;
+    private static boolean mResumed = false;
+    private static boolean mWriteMode = false;
     
-	private NfcAdapter mNfcAdapter;
-	private EditText mNote;
+	private static NfcAdapter mNfcAdapter;
+	private static EditText mNote;
 
-	private PendingIntent mNfcPendingIntent;
-	private IntentFilter[] mWriteTagFilters;
-	private IntentFilter[] mNdefExchangeFilters;
+	private static PendingIntent mNfcPendingIntent;
+	private static IntentFilter[] mWriteTagFilters;
+	private static IntentFilter[] mNdefExchangeFilters;
 
 	//for exchanging messages
 	private static Tag lastDetectedTag = null;
 	private static String messageToSend = null;
 	
-    public void setup(Activity activity) {
+    public static void setup(Activity activity) {
         mNfcAdapter = NfcAdapter.getDefaultAdapter(activity);
 
         // Handle all of our received NFC intents in this activity.
@@ -61,7 +61,7 @@ public class NFCUtils {
         mWriteTagFilters = new IntentFilter[] { tagDetected };
     }
 
-    protected void callOnResume(Activity activity) {
+    public static void callOnResume(Activity activity) {
         mResumed = true;
         // Sticky notes received from Android
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(activity.getIntent().getAction())) {
@@ -72,7 +72,7 @@ public class NFCUtils {
         enableNdefExchangeMode(activity);
     }
 
-    protected void callOnPause(Activity activity) {
+    public static void callOnPause(Activity activity) {
         mResumed = false;
         mNfcAdapter.disableForegroundNdefPush(activity);
     }
@@ -265,12 +265,12 @@ public class NFCUtils {
         return msgs;
     }
 
-    private void enableNdefExchangeMode(Activity activity) {
+    private static void enableNdefExchangeMode(Activity activity) {
         mNfcAdapter.enableForegroundNdefPush(activity, getMessageAsNdef(""));
         mNfcAdapter.enableForegroundDispatch(activity, mNfcPendingIntent, mNdefExchangeFilters, null);
     }
 
-    private void disableNdefExchangeMode(Activity activity) {
+    private static void disableNdefExchangeMode(Activity activity) {
         mNfcAdapter.disableForegroundNdefPush(activity);
         mNfcAdapter.disableForegroundDispatch(activity);
     }

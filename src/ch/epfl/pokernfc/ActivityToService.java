@@ -20,11 +20,15 @@ public class ActivityToService extends Activity {
 		Context con = getApplicationContext();
 		
 		Intent intentForService = NFCUtils.reforgeIntentForService(getIntent(), con, PokerNFCService.class);
-		System.out.println("activity to service");
+		System.out.println("Activity To Service : onNewIntent 1");
 		if (intentForService == null) { return; }
 		
 		con.startService(intentForService); //doesn't matter if called multiple times
-		System.out.println("activity to service 2");
+		System.out.println("Activity To Service : onNewIntent 2");
 		finish();
+	}
+	
+	protected void onNewIntent(Intent intent) {
+		System.out.println("Activity To Service : onNewIntent");
 	}
 }

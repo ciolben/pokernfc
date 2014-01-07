@@ -1,5 +1,6 @@
 package ch.epfl.pokernfc;
 
+import ch.epfl.pokernfc.Utils.NFCUtils;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -62,4 +63,19 @@ public abstract class PokerActivity extends Activity {
     	}
     	
     }
+    
+//    protected void onPause() {
+//    	super.onPause();
+//    	NFCUtils.callOnPause(this);
+//    }
+//    
+//    protected void onResume() {
+//    	super.onResume();
+//    	NFCUtils.callOnResume(this);
+//    }
+//    
+//    protected void onNewIntent(Intent intent) {
+//    	super.onNewIntent(intent);
+//    	NFCUtils.callOnNewIntent(true, intent, this, "TETEEESETSTSETSTTTT");
+//    }
 }
