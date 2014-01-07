@@ -53,7 +53,13 @@ public abstract class PokerActivity extends Activity {
     }
     
     protected void unbind() {
-    	getApplicationContext().unbindService(mConnection);
-    	System.out.println("Activity : unbind service");
+    	System.out.print("Activity : unbind : ");
+    	if (mBound) {
+    		getApplicationContext().unbindService(mConnection);
+    		System.out.println(" ok.");
+    	} else {
+    		System.out.println(" no connection.");
+    	}
+    	
     }
 }
