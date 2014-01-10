@@ -1,2 +1,4 @@
 eclipse.preferences.version=1
+encoding//src/ch/epfl/pokernfc/Logic/network/Client.java=UTF-8
+encoding//src/ch/epfl/pokernfc/Logic/network/Server.java=UTF-8
 encoding//src/ch/epfl/pokernfc/MainActivity.java=UTF-8
