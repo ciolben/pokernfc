@@ -41,14 +41,6 @@ public class MainActivity extends ListActivity {
     
     private static AppActivity[] appActivities;
     
-    //nfc stuff
-    private NfcAdapter nfcAdapter;
-    private PendingIntent nfcPendingIntent;
-    private IntentFilter[] writeTagFilters;
-    private IntentFilter[] defExchangeFilters;
-    private static String POTINTENT = "ch.epfl.pokernfc.PotActivity.NFCMESSAGE";
-    private static String PLAYERINTENT = "ch.epfl.pokernfc.NFCMESSAGE";
-    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

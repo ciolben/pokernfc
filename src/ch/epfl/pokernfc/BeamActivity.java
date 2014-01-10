@@ -1,5 +1,8 @@
 package ch.epfl.pokernfc;
 
+import java.util.ArrayList;
+
+import ch.epfl.pokernfc.Utils.NFCMessageReceivedHandler;
 import ch.epfl.pokernfc.Utils.NFCUtils;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -20,7 +23,15 @@ public class BeamActivity extends Activity implements CreateNdefMessageCallback,
 OnNdefPushCompleteCallback {
 
 	NfcAdapter mNfcAdapter;
-	protected String dataToSend;
+	
+	private ArrayList<NFCMessageReceivedHandler> mNFCMsgHandlers
+		= new ArrayList<NFCMessageReceivedHandler>();
+	
+	/***
+	 * Buffer sent by NFC.
+	 * Once consumed, the buffer is empty.
+	 */
+	protected String mDataToSendBuffer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +61,7 @@ OnNdefPushCompleteCallback {
 	 */
 	@Override
 	public NdefMessage createNdefMessage(NfcEvent event) {
-		String text = dataToSend;
+		String text = mDataToSendBuffer;
 		NdefMessage msg = new NdefMessage(new NdefRecord[] { NFCUtils.createRecord(MIME_TYPE, text.getBytes()),
 				NdefRecord.createApplicationRecord(PACKAGE_NAME) });
 		return msg;
@@ -64,7 +75,10 @@ OnNdefPushCompleteCallback {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case MESSAGE_SENT:
-				Toast.makeText(getApplicationContext(), "Message sent!", Toast.LENGTH_LONG).show();
+//				Toast.makeText(getApplicationContext(), "Message sent!", Toast.LENGTH_LONG).show();
+				
+				// Empty the buffer
+				mDataToSendBuffer = "";
 				break;
 			}
 		}
@@ -95,6 +109,14 @@ OnNdefPushCompleteCallback {
 		}
 	}
 
+	/***
+	 * Register a handler for processing the NFC message received.
+	 * @param handler
+	 */
+	public void registerNFCMessageReceivedHandler(NFCMessageReceivedHandler handler) {
+		mNFCMsgHandlers.add(handler);
+	}
+	
 	/**
 	 * Parses the NDEF Message from the intent and toast to the user
 	 */
@@ -104,7 +126,10 @@ OnNdefPushCompleteCallback {
 		NdefMessage msg = (NdefMessage) rawMsgs[0];
 		// record 0 contains the MIME type, record 1 is the AAR, if present
 		String payload = new String(msg.getRecords()[0].getPayload());
-		Toast.makeText(getApplicationContext(), "Message received over beam: " + payload, Toast.LENGTH_LONG).show();
+//		Toast.makeText(getApplicationContext(), "Message received over beam: " + payload, Toast.LENGTH_LONG).show();
+		for (NFCMessageReceivedHandler handler : mNFCMsgHandlers) {
+			handler.handleMessage(payload);
+		}
 	}
 
 }

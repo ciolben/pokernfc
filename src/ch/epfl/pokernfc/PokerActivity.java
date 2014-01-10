@@ -1,14 +1,18 @@
 package ch.epfl.pokernfc;
 
-import ch.epfl.pokernfc.Utils.NFCUtils;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
 public abstract class PokerActivity extends BeamActivity {
+	
+	/***
+	 * Receive an NFC message
+	 * @param nfcContent
+	 */
 	public abstract void onNFCIntent(String nfcContent);
     
    //shared fields
@@ -41,7 +45,13 @@ public abstract class PokerActivity extends BeamActivity {
     	unbind();
     }
     
-    //common methods
+    @Override
+	protected void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	
+    }
+    
+    //common methods for service implementation
     protected void bind(String id) {
     	Intent bindingIntent = new Intent(this, PokerNFCService.class);
 		bindingIntent.putExtra("ch.epfl.pokernfc." + id, true);

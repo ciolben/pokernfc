@@ -27,14 +27,20 @@ public final class R {
     }
     public static final class id {
         public static final int LinearLayout1=0x7f090001;
-        public static final int action_settings=0x7f090008;
+        public static final int action_settings=0x7f09000e;
         public static final int beam_edit_text=0x7f090000;
         public static final int btPayCash=0x7f090004;
-        public static final int extraLabel=0x7f090007;
+        public static final int extraLabel=0x7f09000d;
+        public static final int textView1=0x7f090005;
+        public static final int textView2=0x7f090006;
+        public static final int textView3=0x7f090007;
         public static final int tvCash=0x7f090002;
         public static final int tvCashValue=0x7f090003;
-        public static final int tvCurrentPot=0x7f090005;
-        public static final int tvValue=0x7f090006;
+        public static final int tvCurrentPot=0x7f09000b;
+        public static final int tvValue=0x7f09000c;
+        public static final int txtIp=0x7f090008;
+        public static final int txtNextID=0x7f09000a;
+        public static final int txtPort=0x7f090009;
     }
     public static final class layout {
         public static final int activity_beam=0x7f030000;

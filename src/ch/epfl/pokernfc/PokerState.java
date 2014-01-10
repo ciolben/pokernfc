@@ -9,6 +9,7 @@ package ch.epfl.pokernfc;
  *
  */
 public class PokerState {
-	public static boolean isPlayer;
-	
+	private static boolean isPlayer;
+	public static void currentActivityIsPlayer(boolean state) { isPlayer = state; }
+	public static boolean lastActivityWasPlayer() { return isPlayer; }
 }

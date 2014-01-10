@@ -2,6 +2,11 @@ package ch.epfl.pokernfc;
 
 import ch.epfl.pokernfc.Logic.PokerObjects;
 import ch.epfl.pokernfc.Logic.Pot;
+import ch.epfl.pokernfc.Utils.MessageUtils;
+import ch.epfl.pokernfc.Utils.NFCUtils;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -25,10 +30,37 @@ public class PotActivity extends PokerActivity {
 		
 		mPot = PokerObjects.getPot();
 		
-		
+		/*
+    	 * Manage state of the application.
+    	 * If we were in the Player state to Pot state, or the opposite.
+    	 */
+    	
+    	if (PokerState.lastActivityWasPlayer()) {
+    		//TODO
+    	}
+		PokerState.currentActivityIsPlayer(false);
 		
 		//binding
 //		bind("Pot");
+	}
+	
+	/**
+	 * Ensure that the buffer is not empty.
+	 */
+	@Override
+	public NdefMessage createNdefMessage(NfcEvent event) {
+		if (mDataToSendBuffer.isEmpty()) {
+			
+			//generate a new id for the next client.
+			
+			int id = PokerObjects.getGame().registerNextAvailablePlayerID();
+			String ip = "100.100.100.100";
+			int port = 80;
+			
+			mDataToSendBuffer = MessageUtils.createNFCWelcome(ip, port, id);
+			
+		}
+		return super.createNdefMessage(event);
 	}
 	
 	@Override

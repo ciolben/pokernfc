@@ -2,6 +2,8 @@ package ch.epfl.pokernfc;
 
 import ch.epfl.pokernfc.Logic.Player;
 import ch.epfl.pokernfc.Logic.PokerObjects;
+import ch.epfl.pokernfc.Utils.MessageUtils;
+import ch.epfl.pokernfc.Utils.NFCMessageReceivedHandler;
 import ch.epfl.pokernfc.Utils.NFCUtils;
 import android.os.Bundle;
 import android.app.Activity;
@@ -25,9 +27,33 @@ public class PlayerActivity extends PokerActivity {
 		setupActionBar();
 		
 		mPlayer = PokerObjects.getPlayer();
+		
 
+    	/*
+    	 * Manage state of the application.
+    	 * If we were in the Player state to Pot state, or the opposite.
+    	 */
+    	
+    	if (!PokerState.lastActivityWasPlayer()) {
+    		//TODO
+    	}
+		PokerState.currentActivityIsPlayer(true);
+		
+		// Register the handler for the NFC message received
+		super.registerNFCMessageReceivedHandler(new NFCMessageReceivedHandler() {
+			
+			@Override
+			public void handleMessage(String message) {
+				Object[] connectionData = MessageUtils.parseNFCWelcomeMessage(message);
+				if (connectionData == null) { return; }
+				
+				//affiche le resultat
+				//TODO
+			}
+		});
+		
 		//Binding
-		bind("Player");
+//		bind("Player");
 	}
 	
 	@Override
