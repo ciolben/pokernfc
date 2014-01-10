@@ -8,7 +8,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
-public abstract class PokerActivity extends Activity {
+public abstract class PokerActivity extends BeamActivity {
 	public abstract void onNFCIntent(String nfcContent);
     
    //shared fields

@@ -59,6 +59,7 @@ public class MainActivity extends ListActivity {
 		appActivities = new AppActivity[] {
 				new AppActivity(R.string.pot, PotActivity.class),
 				new AppActivity(R.string.player, PlayerActivity.class)
+//				new AppActivity(R.string.player, BeamActivity.class)
 		};
 		
 		setListAdapter(new ArrayAdapter<AppActivity>(this,
@@ -74,7 +75,7 @@ public class MainActivity extends ListActivity {
 		//j'ai mit pot at player en SingleTask, comme �a quand il y a un nouveau nfc,
 		//�a appelle onNewIntent sur pot (lire) ou player (�crire)
 		
-		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		//nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		
 //		NFCUtils.setup(this);
 		

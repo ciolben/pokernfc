@@ -15,5 +15,6 @@
     <string name="title_activity_activity_to_service">ActivityToService</string>
     <string name="_10_">-10.-</string>
     <string name="for_test">for test</string>
+    <string name="title_activity_beam">BeamActivity</string>
 
 </resources>

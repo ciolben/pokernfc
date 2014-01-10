@@ -10,6 +10,8 @@
 
     <uses-permission android:name="android.permission.NFC" />
 
+    <uses-feature android:name="android.hardware.nfc" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -24,20 +26,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!--
-            <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED" />
-
-                <meta-data
-                    android:name="android.nfc.action.TECH_DISCOVERED"
-                    android:resource="@xml/nfc_tech_list" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.nfc.action.TAG_DISCOVERED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            -->
         </activity>
         <activity
             android:name="ch.epfl.pokernfc.PotActivity"
@@ -51,8 +39,16 @@
         <activity
             android:name="ch.epfl.pokernfc.PlayerActivity"
             android:label="@string/title_activity_player"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:parentActivityName="ch.epfl.pokernfc.MainActivity" >
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/ch.epfl.pokernfc" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ch.epfl.pokernfc.MainActivity" />
@@ -69,19 +65,27 @@
         <activity
             android:name="ch.epfl.pokernfc.ActivityToService"
             android:label="@string/title_activity_activity_to_service" >
-             <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED" />
-                <meta-data
-                    android:name="android.nfc.action.TECH_DISCOVERED"
-                    android:resource="@xml/nfc_tech_list" />
-                <action android:name="android.nfc.action.TAG_DISCOVERED" />
-               	<action android:name="android.nfc.action.TECH_DISCOVERED" />
+
+            <!--
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
-                
+
+                <data android:mimeType="application/ch.epfl.pokernfc.tag" />
             </intent-filter>
             <intent-filter>
-                
+                <action android:name="android.nfc.action.TAG_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/ch.epfl.pokernfc.tag" />
             </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name="ch.epfl.pokernfc.BeamActivity"
+            android:label="@string/title_activity_beam" >
         </activity>
     </application>
 

@@ -25,8 +25,10 @@ public class PotActivity extends PokerActivity {
 		
 		mPot = PokerObjects.getPot();
 		
+		
+		
 		//binding
-		bind("Pot");
+//		bind("Pot");
 	}
 	
 	@Override

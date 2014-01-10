@@ -60,7 +60,7 @@ public class PokerNFCService extends IntentService implements AsynchHandler<Stri
 		Intent nfcIntent = new Intent(intent);
 		
 		//asynchronous decoding
-		NFCUtils.getNDEFMessage(nfcIntent, this);
+		//NFCUtils.getNDEFMessage(nfcIntent, this);
 		
 	}
 
