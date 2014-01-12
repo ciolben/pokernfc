@@ -64,7 +64,7 @@ public class PlayerActivity extends PokerActivity {
 					Client client = PokerState.getGameClient();
 					if (client != null) {
 						//TODO : some cleaning stuff
-						client.stop();
+						//client.stop();
 					}
 					PokerState.createGameClient(id, ip, port);
 					
