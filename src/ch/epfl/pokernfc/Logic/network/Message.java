@@ -1,9 +1,12 @@
 package ch.epfl.pokernfc.Logic.network;
 
-
-public class Messages{
+/**
+ * Class to handle the type of messages between the server and clients.
+ *
+ */
+public class Message{
 	public static enum MessageType {
-	    INIT, CARD, BID 
+	    UNKNOWN, INIT, CARD, BID, REFUND
 	}
 	private static final String SPLITTER = "@";
 	
@@ -11,22 +14,23 @@ public class Messages{
 	private String mLoad;
 	private MessageType mType;
 	
-	public Messages(MessageType type, String load ) {
+	public Message(MessageType type, String load ) {
 		mType = type;
 		mLoad = load;
 	}
 	
-	public Messages(String message){
+	public Message(String message){
 		String[] s = message.split(SPLITTER);
 		if(s.length == 2){
 			mLoad = s[1];
+			mType = MessageType.UNKNOWN;
 			for (MessageType t : MessageType.values()) {
 				if(s[0].equals(t.name())){
 					mType = t;
 					break;
 				}
 			}
-			if (mType == null){
+			if (mType == MessageType.UNKNOWN){
 				System.err.println("unknown type");
 			}
 		}  else {

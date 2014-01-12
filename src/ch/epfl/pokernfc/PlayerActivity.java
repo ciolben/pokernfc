@@ -3,6 +3,8 @@ package ch.epfl.pokernfc;
 import ch.epfl.pokernfc.Logic.Player;
 import ch.epfl.pokernfc.Logic.PokerObjects;
 import ch.epfl.pokernfc.Logic.network.Client;
+import ch.epfl.pokernfc.Logic.network.Message;
+import ch.epfl.pokernfc.Logic.network.NetworkMessageHandler;
 import ch.epfl.pokernfc.Utils.MessageUtils;
 import ch.epfl.pokernfc.Utils.NFCMessageReceivedHandler;
 import ch.epfl.pokernfc.Utils.NFCUtils;
@@ -11,6 +13,7 @@ import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -18,7 +21,7 @@ import android.os.Build;
 
 public class PlayerActivity extends PokerActivity {
 
-	private Player mPlayer;
+	private NetworkMessageHandler mMsgHandler;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +29,10 @@ public class PlayerActivity extends PokerActivity {
 		setContentView(R.layout.activity_player);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		
-		mPlayer = PokerObjects.getPlayer();
-		
+
 		System.out.println("PlayerActivity : onCreate");
+
+		PokerObjects.getPlayer().addCash(1000.f);
 		
     	/*
     	 * Manage state of the application.
@@ -67,6 +70,8 @@ public class PlayerActivity extends PokerActivity {
 						//client.stop();
 					}
 					PokerState.createGameClient(id, ip, port);
+					
+					registerMessageHandler(); //for receiving news from server
 					
 				} else { System.out.println("--> unknown message"); }
 			}});
@@ -127,6 +132,60 @@ public class PlayerActivity extends PokerActivity {
 	public void onPayCash(View view) {
 		System.out.println("Player : PAY CASH");
 		
-		NFCUtils.write("Test");
+		//Credit the Pot by 10 chf
+		if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(10)))) {
+			PokerObjects.getPlayer().removeCash(10.f);
+			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
+		} else {
+			log("Server not reachable.");
+		}
+	}
+	
+	private void log(String text) {
+		((TextView) findViewById(R.id.txtStatusPlayer)).setText("Status : " + text);
+	}
+	
+	private void registerMessageHandler() {
+		if (mMsgHandler == null) {
+			mMsgHandler = new NetworkMessageHandler() {
+				
+				/**
+				 * Handle message from Server
+				 * @param message
+				 */
+				@Override
+				public void handleMessage(Message message) {
+					
+					final Player player = PokerObjects.getPlayer();
+					
+					switch (message.getType()) {
+					case UNKNOWN:
+						/*do nothing*/
+						break;
+					case REFUND:
+						float amount = Float.parseFloat(message.getLoad());
+						
+						//update player
+						player.addCash(amount);
+						
+						//update view
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(player.getCash()));
+							}
+						});
+						
+						break;
+					default:
+						break;
+						
+					}
+						
+				}
+			};
+		}
+		PokerState.getGameClient().registerNetworkMessageHandler(mMsgHandler);
 	}
 }

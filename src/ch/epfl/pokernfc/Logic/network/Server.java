@@ -21,7 +21,7 @@ import org.apache.http.conn.util.InetAddressUtils;
 //import android.widget.Toast;
 
 
-public class Server extends Thread {
+public class Server extends NetworkComponent {
 
 //	private Handler mHandler;
 
@@ -35,7 +35,6 @@ public class Server extends Thread {
 
 	private Set<Integer> mWaitingPlayerConnection = Collections.newSetFromMap(new ConcurrentHashMap<Integer,Boolean>());
 	private ConcurrentHashMap<Integer, Connection> mSockets = new ConcurrentHashMap<Integer, Connection>();
-
 
 	public int getServerPort() {
 		return SERVERPORT;
@@ -88,7 +87,10 @@ public class Server extends Thread {
 							// DO WHATEVER YOU WANT TO THE FRONT END
 							// THIS IS WHERE YOU CAN BE CREATIVE
 							System.out.println("server received: "+ line);
-
+							if (line != null) {
+								//give content to Pot
+								getMessageHandler().handleMessage(new Message(line));
+							}
 
 //							mHandler.post(new Runnable() {
 //								@Override

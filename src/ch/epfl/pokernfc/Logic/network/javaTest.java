@@ -2,7 +2,7 @@ package ch.epfl.pokernfc.Logic.network;
 
 import java.util.Scanner;
 
-import ch.epfl.pokernfc.Logic.network.Messages.MessageType;
+import ch.epfl.pokernfc.Logic.network.Message.MessageType;
 
 
 public class javaTest {
@@ -23,11 +23,11 @@ public class javaTest {
         String sentence = scanner.nextLine();
         if(sentence.equals("s")){
             sentence = scanner.nextLine();
-            s.sendMessage(Integer.valueOf(sentence), new Messages(MessageType.CARD, "22"));
+            s.sendMessage(Integer.valueOf(sentence), new Message(MessageType.CARD, "22"));
         } else {
         	System.out.println("p "+sentence+" writing");
         	int i = Integer.valueOf(sentence);
-        	t[i].sendMessage(new Messages(MessageType.BID, "34 "+i));
+        	t[i].sendMessage(new Message(MessageType.BID, "34 "+i));
         }
 	}
 }

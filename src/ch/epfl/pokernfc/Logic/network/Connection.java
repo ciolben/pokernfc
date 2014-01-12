@@ -8,7 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import ch.epfl.pokernfc.Logic.network.Messages.MessageType;
+import ch.epfl.pokernfc.Logic.network.Message.MessageType;
 
 
 public class Connection {
@@ -30,12 +30,12 @@ public class Connection {
 			String line = readLine();
 			//mPlayerID = 4;
 //			Log.d("ServerActivity", line);//////////
-			Messages m = new Messages(line);
+			Message m = new Message(line);
 			if(MessageType.INIT == m.getType()){
 				mPlayerID = Integer.valueOf(m.getLoad());
 			}
 			
-			sendMessage(new Messages(MessageType.CARD, "server ack"));
+			sendMessage(new Message(MessageType.CARD, "server ack"));
 
 			
 			//connection ok:
