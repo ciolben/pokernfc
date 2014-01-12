@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Set;
 
 import ch.epfl.pokernfc.Logic.PokerObjects;
 import ch.epfl.pokernfc.Logic.network.Messages.MessageType;
@@ -19,7 +20,7 @@ public class Connection {
 	private BufferedReader inBuffer;
 	private PrintWriter outPrinter;
 
-	public Connection(Socket socket, int id){
+	public Connection(Socket socket){
 		mSocket = socket;
 		try {
 			inBuffer = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
@@ -29,7 +30,7 @@ public class Connection {
 			
 			//read somehow the id and other informations we need
 //			String line = readLine();
-			mPlayerID = id;
+			mPlayerID = 4;
 //			Log.d("ServerActivity", line);//////////
 //			Messages m = new Messages(line);
 //			if(MessageType.INIT == m.getType()){
@@ -108,8 +109,17 @@ public class Connection {
 	}
 
 
-	public int getmPlayerID() {
+	public int getPlayerID() {
 		return mPlayerID;
 	}
-
+	
+	public void close(){
+		outPrinter.close();
+		try {
+			inBuffer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

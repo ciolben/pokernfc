@@ -6,7 +6,9 @@ import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,6 +31,7 @@ public class Server extends Thread {
 	private Thread listenNewPlayerThread = null;
 	private AtomicInteger awaitingNewPlayers = new AtomicInteger(0);
 
+	private Set<Integer> mWaitingPlayerConnection = Collections.newSetFromMap(new ConcurrentHashMap<Integer,Boolean>());
 	private ConcurrentHashMap<Integer, Connection> mSockets = new ConcurrentHashMap<Integer, Connection>();
 
 
@@ -42,7 +45,7 @@ public class Server extends Thread {
 
 	public Server(/*Handler handler*/){
 		//mHandler = handler;
-
+		
 		serverIP = getLocalIpAddress();
 		try {
 			serverSocket = new ServerSocket(SERVERPORT);
@@ -67,7 +70,7 @@ public class Server extends Thread {
 					synchronized (connection) {
 						if (!connection.isAlive()){
 							//remove from list
-							mSockets.remove(connection.getmPlayerID());
+							mSockets.remove(connection.getPlayerID());
 							continue;
 						}
 						String line = null;
@@ -132,10 +135,13 @@ public class Server extends Thread {
 		synchronized (awaitingNewPlayers) {
 			awaitingNewPlayers.incrementAndGet();
 			awaitingNewPlayers.notifyAll();
+			mWaitingPlayerConnection.add(id);
 		}
 		
 
-		if(listenNewPlayerThread == null){
+		if(listenNewPlayerThread == null){		
+	
+		
 		listenNewPlayerThread = new Thread(
 
 
@@ -168,11 +174,17 @@ public class Server extends Thread {
 								lock.unlock();
 								
 								
-								Connection connection = new Connection(client, id);	
-								//connection successfully established with the client: store the socket
-								mSockets.put(connection.getmPlayerID(), connection);
+								Connection connection = new Connection(client);
+								if(mWaitingPlayerConnection.contains(connection.getPlayerID())){
+									//connection successfully established with the client: store the socket
+//									mWaitingPlayerConnection.remove(connection.getPlayerID());
+									mSockets.put(connection.getPlayerID(), connection);
+									awaitingNewPlayers.decrementAndGet();
+								} else {
+									//I was not waiting this player close this connection and forget everything about it
+									connection.close();
+								}
 								
-								awaitingNewPlayers.decrementAndGet();
 							
 						} catch (Exception e) {
 							if(lock.isHeldByCurrentThread()){
@@ -207,7 +219,7 @@ public class Server extends Thread {
 
 			if (!connection.isAlive()) {
 
-				mSockets.remove(connection.getmPlayerID());
+				mSockets.remove(connection.getPlayerID());
 				return false;
 			}
 			boolean writeOK = false;
@@ -229,7 +241,7 @@ public class Server extends Thread {
 		synchronized (connection) {
 
 			if (!connection.isAlive()) {
-				mSockets.remove(connection.getmPlayerID());
+				mSockets.remove(connection.getPlayerID());
 				return null;
 			} else {
 				return connection;
@@ -239,9 +251,14 @@ public class Server extends Thread {
 
 	public void close(){
 		mClose.set(true);
+		mWaitingPlayerConnection.clear();
 		synchronized (awaitingNewPlayers) {
 			awaitingNewPlayers.notifyAll();
 		}
+		for (Connection c : mSockets.values()) {
+			c.close();
+		}
+		mSockets.clear();
 	}
 
 
