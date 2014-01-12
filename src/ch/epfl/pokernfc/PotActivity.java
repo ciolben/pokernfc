@@ -30,6 +30,7 @@ public class PotActivity extends PokerActivity {
 		
 		mPot = PokerObjects.getPot();
 		
+		System.out.println("PotActivity : onCreate");
 		/*
     	 * Manage state of the application.
     	 * If we were in the Player state to Pot state, or the opposite.
@@ -53,13 +54,22 @@ public class PotActivity extends PokerActivity {
 			
 			//generate a new id for the next client.
 			
-			int id = PokerObjects.getGame().registerNextAvailablePlayerID();
-			String ip = "100.100.100.100";
-			int port = 80;
+			int id = PokerObjects.getGame().registerNextPlayerID();
+			if (id == -1) {
+				System.out.println("FATAL ERROR, next player id = 0");
+				id = 0;
+			}
+			PokerState.getGameServer().listenToNewPlayer(id);
+			
+			String ip = PokerState.getGameServer().getServerIP();
+			int port = 	PokerState.getGameServer().getServerPort();
 			
 			mDataToSendBuffer = MessageUtils.createNFCWelcome(ip, port, id);
 			
+			System.out.println("PotActivity : createNdefMessage");
+			
 		}
+		System.out.println("PotActivity : Super::createNdefMessage");
 		return super.createNdefMessage(event);
 	}
 	
@@ -68,6 +78,8 @@ public class PotActivity extends PokerActivity {
         super.onNewIntent(intent);
         setIntent(intent);//must store the new intent unless getIntent() will return the old one
         //TODO
+        
+        System.out.println("PotActivity : onNewIntent");
     }
 	
 	/**

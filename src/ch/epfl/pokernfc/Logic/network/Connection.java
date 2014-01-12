@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import ch.epfl.pokernfc.Logic.PokerObjects;
 import ch.epfl.pokernfc.Logic.network.Messages.MessageType;
 
 
@@ -18,7 +19,7 @@ public class Connection {
 	private BufferedReader inBuffer;
 	private PrintWriter outPrinter;
 
-	public Connection(Socket socket){
+	public Connection(Socket socket, int id){
 		mSocket = socket;
 		try {
 			inBuffer = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
@@ -27,12 +28,13 @@ public class Connection {
 
 			
 			//read somehow the id and other informations we need
-			String line = readLine();
+//			String line = readLine();
+			mPlayerID = id;
 //			Log.d("ServerActivity", line);//////////
-			Messages m = new Messages(line);
-			if(MessageType.INIT == m.getType()){
-				mPlayerID = Integer.valueOf(m.getLoad());
-			}
+//			Messages m = new Messages(line);
+//			if(MessageType.INIT == m.getType()){
+//				mPlayerID = Integer.valueOf(m.getLoad());
+//			}
 			
 			sendMessage(new Messages(MessageType.CARD, "server ack"));
 

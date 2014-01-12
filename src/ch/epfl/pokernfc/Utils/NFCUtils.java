@@ -232,15 +232,15 @@ public class NFCUtils {
     }
 
     /**
-     * From a intent received for a NFC event, this method create an intent for a service with
+     * From a intent received for a NFC event, this method create an intent for another activity/service with
      * the content of the NFC tag.
      * The NFC type must be NDEF, else it will return NULL.
      * @param intent The intent with NFC info.
      * @param appContext The application context.
-     * @param service The destination service class.
+     * @param dest The destination service class.
      * @return the intent for the service, or null if not of NDEF type.
      */
-    public static Intent reforgeIntentForService(Intent intent, Context appContext, Class<?> service) {
+    public static Intent reforgeIntent(Intent intent, Context appContext, Class<?> dest) {
     	Intent outIntent = null;
     	String action = intent.getAction();
     	System.out.println(":::reforge:::");
@@ -251,7 +251,7 @@ public class NFCUtils {
             if (MIME_TEXT_PLAIN.equals(type)) {
                 Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
                 lastDetectedTag = tag;
-                outIntent = new Intent(appContext, service);
+                outIntent = new Intent(appContext, dest);
                 outIntent.putExtra(NFC_EXTRA_TAG, tag);
                 write(messageToSend);
                 return outIntent;
@@ -268,7 +268,7 @@ public class NFCUtils {
             String searchedTech = Ndef.class.getName();
             for (String tech : techList) {
                 if (searchedTech.equals(tech)) {
-                	outIntent = new Intent(appContext, service);
+                	outIntent = new Intent(appContext, dest);
                     outIntent.putExtra(NFC_EXTRA_TAG, tag);
                     write(messageToSend);
                     return outIntent;

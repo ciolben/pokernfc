@@ -6,10 +6,10 @@ package ch.epfl.pokernfc.Utils;
  *
  */
 public class MessageUtils {
-	private static char separator = ',';
+	private static final char SEPARATOR = ',';
 	
 	public static String createNFCWelcome(String ip, int port, int id) {
-		return ip + separator + port + id;
+		return ip + SEPARATOR + port + SEPARATOR + id;
 	}
 	
 	/***
@@ -22,7 +22,7 @@ public class MessageUtils {
 	 */
 	public static Object[] parseNFCWelcomeMessage(String message) {
 		if (message.isEmpty()) { return null; }
-		String[] content = message.split(new String(new char[] {separator}));
+		String[] content = message.split(new String(new char[] {SEPARATOR}));
 		
 		if (content.length < 3) { return null; }
 		Object[] result = new Object[3];

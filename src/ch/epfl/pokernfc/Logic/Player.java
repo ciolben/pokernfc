@@ -1,7 +1,9 @@
 package ch.epfl.pokernfc.Logic;
 
-public class Player {
+import ch.epfl.pokernfc.Logic.network.Client;
 
+public class Player {
+	
 	private float m_cash = 0.f;
 	
 	protected Player() {

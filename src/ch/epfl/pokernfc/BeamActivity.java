@@ -37,6 +37,8 @@ OnNdefPushCompleteCallback {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_beam);
+		
+		System.out.println("BeamActivtiy : OnCreate");
 
 //		mEditText = (EditText) findViewById(R.id.beam_edit_text);
 
@@ -51,6 +53,9 @@ OnNdefPushCompleteCallback {
 			// Register callback to listen for message-sent success
 			mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
 		}
+		
+		//in case application is just started
+		processIntent(getIntent());
 	}
 
 	private static final String MIME_TYPE = "application/ch.epfl.pokernfc";
@@ -62,6 +67,7 @@ OnNdefPushCompleteCallback {
 	@Override
 	public NdefMessage createNdefMessage(NfcEvent event) {
 		String text = mDataToSendBuffer;
+		System.out.println("BeamActivity : createNDEFMessage with : " + text);
 		NdefMessage msg = new NdefMessage(new NdefRecord[] { NFCUtils.createRecord(MIME_TYPE, text.getBytes()),
 				NdefRecord.createApplicationRecord(PACKAGE_NAME) });
 		return msg;
@@ -77,8 +83,10 @@ OnNdefPushCompleteCallback {
 			case MESSAGE_SENT:
 //				Toast.makeText(getApplicationContext(), "Message sent!", Toast.LENGTH_LONG).show();
 				
+				System.out.println("BeamActivity : Message sent, content = " + mDataToSendBuffer);
 				// Empty the buffer
 				mDataToSendBuffer = "";
+				
 				break;
 			}
 		}
@@ -98,15 +106,14 @@ OnNdefPushCompleteCallback {
 	protected void onNewIntent(Intent intent) {
 		// onResume gets called after this to handle the intent
 		setIntent(intent);
+		processIntent(intent);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 		// Check to see that the Activity started due to an Android Beam
-		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-			processIntent(getIntent());
-		}
+		processIntent(getIntent());
 	}
 
 	/***
@@ -121,11 +128,19 @@ OnNdefPushCompleteCallback {
 	 * Parses the NDEF Message from the intent and toast to the user
 	 */
 	void processIntent(Intent intent) {
+		if (!NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+			System.out.println("BeamActivity : processIntent (not NFC)");
+			return;
+		}
+		System.out.println("BeamActivity : processIntent (NFC)");
 		Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 		// in this context, only one message was sent over beam
 		NdefMessage msg = (NdefMessage) rawMsgs[0];
+		
 		// record 0 contains the MIME type, record 1 is the AAR, if present
 		String payload = new String(msg.getRecords()[0].getPayload());
+		System.out.println("BeamActivity : payload : " + payload);
+		
 //		Toast.makeText(getApplicationContext(), "Message received over beam: " + payload, Toast.LENGTH_LONG).show();
 		for (NFCMessageReceivedHandler handler : mNFCMsgHandlers) {
 			handler.handleMessage(payload);

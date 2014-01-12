@@ -1,5 +1,7 @@
 package ch.epfl.pokernfc.Logic;
 
+import ch.epfl.pokernfc.Logic.network.Server;
+
 public class Pot {
 
 	private float m_value = 0.f;

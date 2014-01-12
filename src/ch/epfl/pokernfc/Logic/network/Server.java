@@ -32,11 +32,11 @@ public class Server extends Thread {
 	private ConcurrentHashMap<Integer, Connection> mSockets = new ConcurrentHashMap<Integer, Connection>();
 
 
-	public static int getServerPort() {
+	public int getServerPort() {
 		return SERVERPORT;
 	}
 
-	public static String getServerIP() {
+	public String getServerIP() {
 		return serverIP;
 	}
 
@@ -123,13 +123,16 @@ public class Server extends Thread {
 		return null;
 	}
 
-	public void  listenToNewPlayer(){
-		
-		//increment the number of player i'm waiting and wake up waiting thread
-	synchronized (awaitingNewPlayers) {
-		awaitingNewPlayers.incrementAndGet();
-		awaitingNewPlayers.notifyAll();
-	}
+	/***
+	 * Start listening to Player with the specified id.
+	 * @return
+	 */
+	public void listenToNewPlayer(final int id){
+
+		synchronized (awaitingNewPlayers) {
+			awaitingNewPlayers.incrementAndGet();
+			awaitingNewPlayers.notifyAll();
+		}
 		
 
 		if(listenNewPlayerThread == null){
@@ -140,7 +143,7 @@ public class Server extends Thread {
 
 					@Override
 					public void run() {
-						System.out.println("wainitng for new player...");
+						System.out.println("waiting for new player...");
 
 						if (serverIP != null) {
 							
@@ -165,7 +168,7 @@ public class Server extends Thread {
 								lock.unlock();
 								
 								
-								Connection connection = new Connection(client);	
+								Connection connection = new Connection(client, id);	
 								//connection successfully established with the client: store the socket
 								mSockets.put(connection.getmPlayerID(), connection);
 								

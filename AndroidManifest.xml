@@ -30,7 +30,7 @@
         <activity
             android:name="ch.epfl.pokernfc.PotActivity"
             android:label="@string/title_activity_pot"
-            android:launchMode="singleTask"
+            android:launchMode="singleInstance"
             android:parentActivityName="ch.epfl.pokernfc.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -39,15 +39,8 @@
         <activity
             android:name="ch.epfl.pokernfc.PlayerActivity"
             android:label="@string/title_activity_player"
-            android:launchMode="singleTop"
+            android:launchMode="singleInstance"
             android:parentActivityName="ch.epfl.pokernfc.MainActivity" >
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="application/ch.epfl.pokernfc" />
-            </intent-filter>
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -63,9 +56,17 @@
 
         <!-- will bridge NFC requests to service -->
         <activity
-            android:name="ch.epfl.pokernfc.ActivityToService"
+            android:name="ch.epfl.pokernfc.ActivityDispatcher"
             android:label="@string/title_activity_activity_to_service" >
 
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/ch.epfl.pokernfc" />
+            </intent-filter>
+            
             <!--
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
@@ -86,6 +87,7 @@
         <activity
             android:name="ch.epfl.pokernfc.BeamActivity"
             android:label="@string/title_activity_beam" >
+            
         </activity>
     </application>
 

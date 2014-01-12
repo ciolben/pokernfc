@@ -2,6 +2,7 @@ package ch.epfl.pokernfc;
 
 import ch.epfl.pokernfc.Logic.Player;
 import ch.epfl.pokernfc.Logic.PokerObjects;
+import ch.epfl.pokernfc.Logic.network.Client;
 import ch.epfl.pokernfc.Utils.MessageUtils;
 import ch.epfl.pokernfc.Utils.NFCMessageReceivedHandler;
 import ch.epfl.pokernfc.Utils.NFCUtils;
@@ -18,7 +19,7 @@ import android.os.Build;
 public class PlayerActivity extends PokerActivity {
 
 	private Player mPlayer;
-    
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,7 +29,8 @@ public class PlayerActivity extends PokerActivity {
 		
 		mPlayer = PokerObjects.getPlayer();
 		
-
+		System.out.println("PlayerActivity : onCreate");
+		
     	/*
     	 * Manage state of the application.
     	 * If we were in the Player state to Pot state, or the opposite.
@@ -45,12 +47,29 @@ public class PlayerActivity extends PokerActivity {
 			@Override
 			public void handleMessage(String message) {
 				Object[] connectionData = MessageUtils.parseNFCWelcomeMessage(message);
-				if (connectionData == null) { return; }
+				System.out.print("PlayerActivity : handleNFCWelcomeMessage\n");
+				if (connectionData != null) {
 				
-				//affiche le resultat
-				//TODO
-			}
-		});
+					String ip = (String) 	connectionData[0];
+					int port = 	(Integer)	connectionData[1];
+					int id = 	(Integer)	connectionData[2];
+		
+					//affiche le resultat
+					System.out.println("--> decoded message : \n"
+							+ "[0] \t" + ip
+							+ "[1] \t" + port
+							+ "[2] \t" + id);
+					
+					//Start client
+					Client client = PokerState.getGameClient();
+					if (client != null) {
+						//TODO : some cleaning stuff
+						client.stop();
+					}
+					PokerState.createGameClient(id, ip, port);
+					
+				} else { System.out.println("--> unknown message"); }
+			}});
 		
 		//Binding
 //		bind("Player");
@@ -61,6 +80,9 @@ public class PlayerActivity extends PokerActivity {
         super.onNewIntent(intent);
         setIntent(intent);//must store the new intent unless getIntent() will return the old one
         //TODO
+        
+        System.out.println("PlayerActivity : onNewIntent");
+//        processIntent(intent); not needed because of super.onNewIntent before
     }
 
 	/**

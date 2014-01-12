@@ -12,7 +12,7 @@ public class javaTest {
 	Client t[] = new Client[6];
 	for (int i =1; i<= 5; i++){
 	t[i] = new Client(i, "127.0.0.1", 8765);
-	s.listenToNewPlayer();
+	s.listenToNewPlayer(i);
 	}
 	
 	
@@ -25,7 +25,7 @@ public class javaTest {
             sentence = scanner.nextLine();
             s.sendMessage(Integer.valueOf(sentence), new Messages(MessageType.CARD, "22"));
         } else {
-        	System.out.println("p "+sentence+" wrinting");
+        	System.out.println("p "+sentence+" writing");
         	int i = Integer.valueOf(sentence);
         	t[i].sendMessage(new Messages(MessageType.BID, "34 "+i));
         }
