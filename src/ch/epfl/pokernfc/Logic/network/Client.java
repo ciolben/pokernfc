@@ -62,7 +62,6 @@ public class Client extends Thread {
 					//}
 					
 //					Log.d("ClientActivity", "C: Sent.");
-					sleep(5000);
 				} catch (Exception e) {
 //					Log.e("ClientActivity", "S: Error", e);
 					e.printStackTrace();

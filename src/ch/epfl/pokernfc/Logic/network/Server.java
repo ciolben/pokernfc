@@ -64,8 +64,13 @@ public class Server extends Thread {
 
 			//while not close  check all msocket from time to time... sync the socket
 			while (!mClose.get()) {
-				// LISTEN FOR INCOMING CLIENTS
-
+				try {
+					//some sleep is always good
+					sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				for (Connection connection : mSockets.values()) {
 					synchronized (connection) {
 						if (!connection.isAlive()){
@@ -91,12 +96,6 @@ public class Server extends Thread {
 //								}
 //							});
 							connection.updateLastSeen();
-						}
-						try {
-							sleep(100);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
 						}
 					}
 				}
