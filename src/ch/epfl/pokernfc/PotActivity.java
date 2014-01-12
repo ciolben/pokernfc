@@ -41,8 +41,27 @@ public class PotActivity extends PokerActivity {
     	}
 		PokerState.currentActivityIsPlayer(false);
 		
+		//init first message to send
+		prepareNextWelcomeMessage();
+		
 		//binding
 //		bind("Pot");
+	}
+	
+	private void prepareNextWelcomeMessage() {
+		//generate a new id for the next client.
+		
+		int id = PokerObjects.getGame().registerNextPlayerID();
+		if (id == -1) {
+			System.out.println("FATAL ERROR, next player id = 0");
+			id = 0;
+		}
+		PokerState.getGameServer().listenToNewPlayer(id);
+		
+		String ip = PokerState.getGameServer().getServerIP();
+		int port = 	PokerState.getGameServer().getServerPort();
+		
+		mDataToSendBuffer = MessageUtils.createNFCWelcome(ip, port, id);
 	}
 	
 	/**
@@ -52,19 +71,7 @@ public class PotActivity extends PokerActivity {
 	public NdefMessage createNdefMessage(NfcEvent event) {
 		if (mDataToSendBuffer.isEmpty()) {
 			
-			//generate a new id for the next client.
-			
-			int id = PokerObjects.getGame().registerNextPlayerID();
-			if (id == -1) {
-				System.out.println("FATAL ERROR, next player id = 0");
-				id = 0;
-			}
-			PokerState.getGameServer().listenToNewPlayer(id);
-			
-			String ip = PokerState.getGameServer().getServerIP();
-			int port = 	PokerState.getGameServer().getServerPort();
-			
-			mDataToSendBuffer = MessageUtils.createNFCWelcome(ip, port, id);
+			prepareNextWelcomeMessage();
 			
 			System.out.println("PotActivity : createNdefMessage");
 			
