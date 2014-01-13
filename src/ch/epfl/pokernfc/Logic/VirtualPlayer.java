@@ -1,10 +1,10 @@
 package ch.epfl.pokernfc.Logic;
 
-public class Player {
+public class VirtualPlayer {
 	
 	private float m_cash = 0.f;
 	
-	protected Player() {
+	protected VirtualPlayer() {
 		
 	}
 	

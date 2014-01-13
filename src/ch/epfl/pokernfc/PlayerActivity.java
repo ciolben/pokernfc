@@ -1,6 +1,6 @@
 package ch.epfl.pokernfc;
 
-import ch.epfl.pokernfc.Logic.Player;
+import ch.epfl.pokernfc.Logic.VirtualPlayer;
 import ch.epfl.pokernfc.Logic.PokerObjects;
 import ch.epfl.pokernfc.Logic.network.Client;
 import ch.epfl.pokernfc.Logic.network.Message;
@@ -170,7 +170,7 @@ public class PlayerActivity extends PokerActivity {
 				@Override
 				public void handleMessage(Message message) {
 					
-					final Player player = PokerObjects.getPlayer();
+					final VirtualPlayer player = PokerObjects.getPlayer();
 					
 					switch (message.getType()) {
 					case UNKNOWN:

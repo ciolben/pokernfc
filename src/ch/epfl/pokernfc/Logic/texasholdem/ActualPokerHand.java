@@ -113,7 +113,7 @@ public class ActualPokerHand implements Comparable<ActualPokerHand>
 
   private String determineWinningDuplicates(List<Card> winningCards, int numDuplicates)
   {
-    Map<Value, List<Card>> valueMap = Game.buildValueMap(winningCards, null);
+    Map<Value, List<Card>> valueMap = GameUtils.buildValueMap(winningCards, null);
     List<Card> winningDupes = new ArrayList<Card>();
     for (Map.Entry<Value, List<Card>> entry : valueMap.entrySet())
     {

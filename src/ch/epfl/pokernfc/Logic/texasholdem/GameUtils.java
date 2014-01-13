@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Game
+public class GameUtils
 {
   private Deck deck;
   private List<Player> players = new ArrayList<Player>();
   private List<Card> communityCards = new ArrayList<Card>();
   
-  public Game ()
+  public GameUtils ()
   {
     for (int i=1; i<=4; i++)
       players.add(new Player("player"+i));
