@@ -27,6 +27,8 @@ public class Server extends Thread {
 	private static String serverIP;
 	private ServerSocket serverSocket;
 	private AtomicBoolean mClose = new AtomicBoolean(false);
+	private AtomicBoolean mNewPlayerClose = new AtomicBoolean(false);
+
 	private ReentrantLock lock = new ReentrantLock();
 	private Thread listenNewPlayerThread = null;
 	private AtomicInteger awaitingNewPlayers = new AtomicInteger(0);
@@ -146,19 +148,20 @@ public class Server extends Thread {
 
 				new Runnable() {
 
+
 					@Override
 					public void run() {
 						System.out.println("waiting for new player...");
 
 						if (serverIP != null) {
 							
-						while (!mClose.get()){
+						while (!mNewPlayerClose.get()){
 							if (awaitingNewPlayers.get() <= 0){
 								try {
 									synchronized (awaitingNewPlayers) {
 										awaitingNewPlayers.wait();
 									}
-									if(mClose.get()) break;
+									if(mNewPlayerClose.get()) break;
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
@@ -248,12 +251,24 @@ public class Server extends Thread {
 		}
 	}
 
-	public void close(){
-		mClose.set(true);
-		mWaitingPlayerConnection.clear();
+	public void closeNewPlayer(){
+		mNewPlayerClose.set(true);
 		synchronized (awaitingNewPlayers) {
 			awaitingNewPlayers.notifyAll();
 		}
+		if(listenNewPlayerThread != null){
+			listenNewPlayerThread.interrupt();
+		}
+		listenNewPlayerThread =null;
+		
+		// maybe return player inside mWaitingPlayerConnection hence the one that didn't connect properly
+		mWaitingPlayerConnection.clear();
+		
+	}
+	
+	public void close(){
+		mClose.set(true);
+		closeNewPlayer();
 		for (Connection c : mSockets.values()) {
 			c.close();
 		}
