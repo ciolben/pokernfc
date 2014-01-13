@@ -91,7 +91,9 @@ public class Server extends NetworkComponent {
 							System.out.println("server received: "+ line);
 							if (line != null) {
 								//give content to Pot
-								getMessageHandler().handleMessage(new Message(line));
+								for (NetworkMessageHandler handler : getMessageHandlers()) {
+									handler.handleMessage(new Message(line));
+								}
 							}
 
 //							mHandler.post(new Runnable() {

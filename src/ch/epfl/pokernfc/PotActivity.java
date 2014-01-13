@@ -1,25 +1,21 @@
 package ch.epfl.pokernfc;
 
-import ch.epfl.pokernfc.Logic.VirtualPlayer;
+import android.annotation.TargetApi;
+import android.content.Intent;
+import android.nfc.NdefMessage;
+import android.nfc.NfcEvent;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import ch.epfl.pokernfc.Logic.PokerObjects;
 import ch.epfl.pokernfc.Logic.Pot;
 import ch.epfl.pokernfc.Logic.network.Message;
 import ch.epfl.pokernfc.Logic.network.NetworkMessageHandler;
 import ch.epfl.pokernfc.Utils.MessageUtils;
-import ch.epfl.pokernfc.Utils.NFCUtils;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
-import android.nfc.NfcEvent;
-import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.support.v4.app.NavUtils;
-import android.annotation.TargetApi;
-import android.content.Intent;
-import android.os.Build;
 
 public class PotActivity extends PokerActivity {
 
