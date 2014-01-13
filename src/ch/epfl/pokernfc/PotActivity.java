@@ -1,6 +1,6 @@
 package ch.epfl.pokernfc;
 
-import ch.epfl.pokernfc.Logic.Player;
+import ch.epfl.pokernfc.Logic.VirtualPlayer;
 import ch.epfl.pokernfc.Logic.PokerObjects;
 import ch.epfl.pokernfc.Logic.Pot;
 import ch.epfl.pokernfc.Logic.network.Message;

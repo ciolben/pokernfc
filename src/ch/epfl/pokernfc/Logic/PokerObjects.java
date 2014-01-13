@@ -7,7 +7,7 @@ package ch.epfl.pokernfc.Logic;
  */
 public class PokerObjects {
 	private static Pot potInstance = null;
-	private static Player playerInstance = null;
+	private static VirtualPlayer playerInstance = null;
 	private static Game gameInstance = null;
 	
 	private PokerObjects() {}
@@ -19,9 +19,9 @@ public class PokerObjects {
 		return potInstance;
 	}
 	
-	public static Player getPlayer() {
+	public static VirtualPlayer getPlayer() {
 		if (playerInstance == null) {
-			playerInstance = new Player();
+			playerInstance = new VirtualPlayer();
 		}
 		return playerInstance;
 	}
