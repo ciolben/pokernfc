@@ -240,21 +240,21 @@ public class Server extends NetworkComponent {
 		}
 	}
 
-	public Connection receiveMessage(int id){
-		Connection connection = mSockets.get(id);
-		if (connection == null){
-			return null;
-		}
-		synchronized (connection) {
-
-			if (!connection.isAlive()) {
-				mSockets.remove(connection.getPlayerID());
-				return null;
-			} else {
-				return connection;
-			}
-		}
-	}
+//	public Connection receiveMessage(int id){
+//		Connection connection = mSockets.get(id);
+//		if (connection == null){
+//			return null;
+//		}
+//		synchronized (connection) {
+//
+//			if (!connection.isAlive()) {
+//				mSockets.remove(connection.getPlayerID());
+//				return null;
+//			} else {
+//				return connection;
+//			}
+//		}
+//	}
 
 	public void closeNewPlayer(){
 		mNewPlayerClose.set(true);
