@@ -31,7 +31,7 @@ OnNdefPushCompleteCallback {
 	 * Buffer sent by NFC.
 	 * Once consumed, the buffer is empty.
 	 */
-	protected String mDataToSendBuffer;
+	protected String mDataToSendBuffer = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

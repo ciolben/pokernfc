@@ -1,9 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LinearLayout1"
+    android:id="@+id/GridLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backrepeat"
+    android:columnCount="3"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -13,49 +14,38 @@
 
     <TextView
         android:id="@+id/tvCurrentPot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_gravity="left"
         android:text="@string/textview_currentpot"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/white" />
 
     <TextView
         android:id="@+id/tvValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_gravity="left"
         android:layout_marginLeft="10dp"
         android:text="@string/textview_potvalue"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="italic" />
 
+    <Space
+        android:layout_column="2"
+        android:layout_gravity="fill_vertical"
+        android:layout_row="1" />
+
     <TextView
-        android:id="@+id/extraLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/for_test" />
+        android:id="@+id/txtStatusPot"
+        android:layout_column="1"
+        android:layout_gravity="center"
+        android:layout_row="0"
+        android:text="Status : nothing to display"
+        android:textColor="@android:color/white" />
 
-    <GridLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="0.47"
-        android:columnCount="1" >
+    <Button
+        android:id="@+id/button1"
+        android:layout_column="0"
+        android:layout_gravity="left|center_vertical"
+        android:layout_row="1"
+        android:onClick="onShare"
+        android:text="Redistribute Cash" />
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_column="0"
-            android:layout_gravity="left|center_vertical"
-            android:layout_row="0"
-            android:textColor="@android:color/white"
-            android:text="Current ID :" />
-
-        <TextView
-            android:id="@+id/txtNextID"
-            android:layout_column="0"
-            android:layout_gravity="center"
-            android:layout_row="0"
-            android:text="0"
-            android:textColor="@android:color/white" />
-
-    </GridLayout>
-
-</LinearLayout>
+</GridLayout>

@@ -16,5 +16,6 @@
     <string name="_10_">-10.-</string>
     <string name="for_test">for test</string>
     <string name="title_activity_beam">BeamActivity</string>
+    <string name="bid">Bid :</string>
 
 </resources>

@@ -9,12 +9,13 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import ch.epfl.pokernfc.Logic.network.Messages.MessageType;
+import ch.epfl.pokernfc.Logic.PokerObjects;
+import ch.epfl.pokernfc.Logic.network.Message.MessageType;
 
 //import android.os.Handler;
 //import android.util.Log;
 
-public class Client extends Thread {
+public class Client extends NetworkComponent {
 	private static String mServerIP;
 	private static int mServerPort = 8765;
 	private boolean mConnected;
@@ -44,7 +45,7 @@ public class Client extends Thread {
 
 			
 			//send first message to server: registration blabla
-			outPrinter.println(new Messages(MessageType.INIT, myID+""));
+			outPrinter.println(new Message(MessageType.INIT, myID+""));
 			System.out.println("client "+ myID+" send init");
 
 
@@ -58,7 +59,12 @@ public class Client extends Thread {
 					
 					// WHERE YOU ISSUE THE COMMANDS
 					//if(messageAvailable()){
-					System.out.println("client "+myID+" received: "+ readLine());
+					String content = readLine();
+					System.out.println("client "+myID+" received: "+ content);
+					if (content != null) {
+						//give content to player
+						getMessageHandler().handleMessage(new Message(content));
+					}
 					//}
 					
 //					Log.d("ClientActivity", "C: Sent.");
@@ -83,12 +89,15 @@ public class Client extends Thread {
 		return true;
 		} else {
 			return false;
-		}
+		} 
 }
 
 	public synchronized String readLine(){
 		try {
 			if(inBuffer != null){
+				
+				//TODO : if receive is null = end of stream -> close connection
+				
 			return inBuffer.readLine();
 			}
 		} catch (IOException e) {
@@ -107,4 +116,4 @@ public class Client extends Thread {
 
 
 	}
-}
+ }

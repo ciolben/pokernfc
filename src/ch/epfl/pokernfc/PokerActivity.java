@@ -6,6 +6,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.TextView;
 
 public abstract class PokerActivity extends BeamActivity {
 	
@@ -72,6 +73,21 @@ public abstract class PokerActivity extends BeamActivity {
     		System.out.println(" no connection.");
     	}
     	
+    }
+    
+    /**
+     * Helper
+     * @param viewID
+     * @param content
+     */
+    protected void updateUiTextView(final int viewID, final String content) {
+    	runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				((TextView) findViewById(viewID)).setText(content);
+			}
+		});
     }
     
 //    protected void onPause() {

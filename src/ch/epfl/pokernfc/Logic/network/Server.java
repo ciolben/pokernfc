@@ -14,12 +14,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.apache.http.conn.util.InetAddressUtils;
+
 //import android.os.Handler;
 //import android.util.Log;
 //import android.widget.Toast;
 
 
-public class Server extends Thread {
+public class Server extends NetworkComponent {
 
 //	private Handler mHandler;
 
@@ -35,7 +37,6 @@ public class Server extends Thread {
 
 	private Set<Integer> mWaitingPlayerConnection = Collections.newSetFromMap(new ConcurrentHashMap<Integer,Boolean>());
 	private ConcurrentHashMap<Integer, Connection> mSockets = new ConcurrentHashMap<Integer, Connection>();
-
 
 	public int getServerPort() {
 		return SERVERPORT;
@@ -88,7 +89,10 @@ public class Server extends Thread {
 							// DO WHATEVER YOU WANT TO THE FRONT END
 							// THIS IS WHERE YOU CAN BE CREATIVE
 							System.out.println("server received: "+ line);
-
+							if (line != null) {
+								//give content to Pot
+								getMessageHandler().handleMessage(new Message(line));
+							}
 
 //							mHandler.post(new Runnable() {
 //								@Override
@@ -110,12 +114,13 @@ public class Server extends Thread {
 
 	//get ip of the local network
 	private String getLocalIpAddress() {
+		
 		try {
 			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
 				NetworkInterface intf = en.nextElement();
 				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
 					InetAddress inetAddress = enumIpAddr.nextElement();
-					if (!inetAddress.isLoopbackAddress()) { 
+					if (!inetAddress.isLoopbackAddress() && InetAddressUtils.isIPv4Address(inetAddress.getHostAddress())) { 
 
 						return inetAddress.getHostAddress().toString(); }
 				}
