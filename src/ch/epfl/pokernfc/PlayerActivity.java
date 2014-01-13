@@ -8,11 +8,13 @@ import ch.epfl.pokernfc.Logic.network.NetworkMessageHandler;
 import ch.epfl.pokernfc.Utils.MessageUtils;
 import ch.epfl.pokernfc.Utils.NFCMessageReceivedHandler;
 import ch.epfl.pokernfc.Utils.NFCUtils;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
@@ -22,13 +24,24 @@ import android.os.Build;
 public class PlayerActivity extends PokerActivity {
 
 	private NetworkMessageHandler mMsgHandler;
+	private ImageView card1;
+	private ImageView card2;	
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_player);
+		
+		card1 = (ImageView) findViewById(R.id.playerCard1);
+		card1.setVisibility(View.INVISIBLE);
+		card2 = (ImageView) findViewById(R.id.playerCard2);
+		card2.setVisibility(View.INVISIBLE);
+		
 		// Show the Up button in the action bar.
 		setupActionBar();
+
+		
 
 		System.out.println("PlayerActivity : onCreate");
 
@@ -131,7 +144,8 @@ public class PlayerActivity extends PokerActivity {
 
 	public void onPayCash(View view) {
 		System.out.println("Player : PAY CASH");
-		
+		card1.setVisibility(View.VISIBLE);
+		card2.setVisibility(View.VISIBLE);
 		//Credit the Pot by 10 chf
 		if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(10)))) {
 			PokerObjects.getPlayer().removeCash(10.f);

@@ -21,24 +21,32 @@ public final class R {
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int backrepeat=0x7f020000;
-        public static final int bkgpot=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
+        public static final int back_card=0x7f020000;
+        public static final int backrepeat=0x7f020001;
+        public static final int bkgpot=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
     }
     public static final class id {
         public static final int GridLayout1=0x7f090002;
         public static final int LinearLayout1=0x7f090001;
         public static final int TextView01=0x7f090006;
-        public static final int action_settings=0x7f09000c;
+        public static final int action_settings=0x7f090013;
         public static final int beam_edit_text=0x7f090000;
         public static final int btPayCash=0x7f090005;
-        public static final int button1=0x7f09000b;
+        public static final int button1=0x7f09000d;
+        public static final int playerCard1=0x7f090008;
+        public static final int playerCard2=0x7f090009;
+        public static final int potCard1=0x7f09000e;
+        public static final int potCard2=0x7f09000f;
+        public static final int potCard3=0x7f090010;
+        public static final int potCard4=0x7f090011;
+        public static final int potCard5=0x7f090012;
         public static final int tvCash=0x7f090003;
         public static final int tvCashValue=0x7f090004;
-        public static final int tvCurrentPot=0x7f090008;
-        public static final int tvValue=0x7f090009;
+        public static final int tvCurrentPot=0x7f09000a;
+        public static final int tvValue=0x7f09000b;
         public static final int txtStatusPlayer=0x7f090007;
-        public static final int txtStatusPot=0x7f09000a;
+        public static final int txtStatusPot=0x7f09000c;
     }
     public static final class layout {
         public static final int activity_beam=0x7f030000;
