@@ -6,7 +6,12 @@ package ch.epfl.pokernfc.Logic.network;
  */
 public class Message{
 	public static enum MessageType {
-	    UNKNOWN, INIT, CARD, BID, REFUND
+	    UNKNOWN, 	//unknown message
+	    INIT,		//
+	    CARD,		//send a card
+	    BID,		//send a bid
+	    ASKBLIND,	//ask for small/big blind
+	    REFUND		//send money back
 	}
 	private static final String SPLITTER = "@";
 	

@@ -63,7 +63,9 @@ public class Client extends NetworkComponent {
 					System.out.println("client "+myID+" received: "+ content);
 					if (content != null) {
 						//give content to player
-						getMessageHandler().handleMessage(new Message(content));
+						for (NetworkMessageHandler handler : getMessageHandlers()) {
+							handler.handleMessage(new Message(content));
+						}
 					}
 					//}
 					

@@ -1,18 +1,20 @@
 package ch.epfl.pokernfc.Logic.network;
 
+import java.util.ArrayList;
+
 /**
  * Ensure Server and Client can register a message handler.
  * @author Loic
  *
  */
 public abstract class NetworkComponent extends Thread {
-	private NetworkMessageHandler mMessageHandler;
+	private ArrayList<NetworkMessageHandler> mMessageHandlers;
 	
 	public void registerNetworkMessageHandler(NetworkMessageHandler handler) {
-		mMessageHandler = handler;
+		mMessageHandlers.add(handler);
 	}
 	
-	public NetworkMessageHandler getMessageHandler() {
-		return mMessageHandler;
+	public ArrayList<NetworkMessageHandler> getMessageHandlers() {
+		return mMessageHandlers;
 	}
 }
