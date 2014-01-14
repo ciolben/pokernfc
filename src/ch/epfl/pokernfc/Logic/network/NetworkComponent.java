@@ -8,7 +8,7 @@ import java.util.ArrayList;
  *
  */
 public abstract class NetworkComponent extends Thread {
-	private ArrayList<NetworkMessageHandler> mMessageHandlers;
+	private ArrayList<NetworkMessageHandler> mMessageHandlers = new ArrayList<NetworkMessageHandler>();
 	
 	public void registerNetworkMessageHandler(NetworkMessageHandler handler) {
 		mMessageHandlers.add(handler);
