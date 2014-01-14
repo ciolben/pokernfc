@@ -38,16 +38,16 @@ public class PotActivity extends PokerActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pot);
 		
-		card1 = (ImageView) findViewById(R.id.potCard1);
-		card1.setVisibility(View.INVISIBLE);
-		card2 = (ImageView) findViewById(R.id.potCard2);
-		card2.setVisibility(View.INVISIBLE);
-		card3 = (ImageView) findViewById(R.id.potCard3);
-		card3.setVisibility(View.INVISIBLE);
-		card4 = (ImageView) findViewById(R.id.potCard4);
-		card4.setVisibility(View.INVISIBLE);
-		card5 = (ImageView) findViewById(R.id.potCard5);
-		card5.setVisibility(View.INVISIBLE);
+//		card1 = (ImageView) findViewById(R.id.potCard1);
+//		card1.setVisibility(View.INVISIBLE);
+//		card2 = (ImageView) findViewById(R.id.potCard2);
+//		card2.setVisibility(View.INVISIBLE);
+//		card3 = (ImageView) findViewById(R.id.potCard3);
+//		card3.setVisibility(View.INVISIBLE);
+//		card4 = (ImageView) findViewById(R.id.potCard4);
+//		card4.setVisibility(View.INVISIBLE);
+//		card5 = (ImageView) findViewById(R.id.potCard5);
+//		card5.setVisibility(View.INVISIBLE);
 		
 		// Show the Up button in the action bar.
 		setupActionBar();

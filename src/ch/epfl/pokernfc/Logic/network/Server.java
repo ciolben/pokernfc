@@ -14,7 +14,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.crypto.spec.DESKeySpec;
+
 import org.apache.http.conn.util.InetAddressUtils;
+
+import ch.epfl.pokernfc.Logic.network.Message.MessageType;
+import ch.epfl.pokernfc.Logic.texasholdem.Card;
+import ch.epfl.pokernfc.Logic.texasholdem.Deck;
 
 //import android.os.Handler;
 //import android.util.Log;
@@ -65,6 +71,10 @@ public class Server extends NetworkComponent {
 		if (serverIP != null){
 //			writeToastMessage("Listening on IP: " + serverIP, Toast.LENGTH_SHORT);
 
+			//TODO test::
+			Deck deck = new Deck();
+			
+			
 			//while not close  check all msocket from time to time... sync the socket
 			while (!mClose.get()) {
 				try {
@@ -82,6 +92,12 @@ public class Server extends NetworkComponent {
 							continue;
 						}
 						String line = null;
+						//deck.shuffleDeck();
+						for (Card card : deck.getCards()) {
+							sendMessage(connection.getPlayerID(), new Message(MessageType.CARD1, card.getValue().getSuitValue()+"_"+card.getSuit().getSuitValue()));
+
+						}
+						
 						while (connection.messageAvailable() && (line = connection.readLine()) != null) {
 //							Log.d("ServerActivity", line);//////////
 

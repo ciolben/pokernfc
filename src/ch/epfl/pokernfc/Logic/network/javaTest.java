@@ -23,7 +23,7 @@ public class javaTest {
         String sentence = scanner.nextLine();
         if(sentence.equals("s")){
             sentence = scanner.nextLine();
-            s.sendMessage(Integer.valueOf(sentence), new Message(MessageType.CARD, "22"));
+            s.sendMessage(Integer.valueOf(sentence), new Message(MessageType.CARD1, "14_2"));
         } else {
         	System.out.println("p "+sentence+" writing");
         	int i = Integer.valueOf(sentence);

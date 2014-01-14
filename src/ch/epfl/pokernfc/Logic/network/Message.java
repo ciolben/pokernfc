@@ -8,10 +8,12 @@ public class Message{
 	public static enum MessageType {
 	    UNKNOWN, 	//unknown message
 	    INIT,		//
-	    CARD,		//send a card
+	    CARD1,		//send card1
+	    CARD2,		//send card2
 	    BID,		//send a bid
 	    ASKBLIND,	//ask for small/big blind
 	    REFUND		//send money back
+, ACK
 	}
 	private static final String SPLITTER = "@";
 	

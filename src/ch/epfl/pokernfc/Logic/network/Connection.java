@@ -35,7 +35,7 @@ public class Connection {
 				mPlayerID = Integer.valueOf(m.getLoad());
 			}
 			
-			sendMessage(new Message(MessageType.CARD, "server ack"));
+			sendMessage(new Message(MessageType.ACK, "server ack"));
 
 			
 			//connection ok:

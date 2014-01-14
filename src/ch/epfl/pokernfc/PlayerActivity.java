@@ -11,28 +11,41 @@ import ch.epfl.pokernfc.Utils.NFCUtils;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.TimePickerDialog;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.provider.ContactsContract.CommonDataKinds.Im;
 
 public class PlayerActivity extends PokerActivity {
 
 	private NetworkMessageHandler mMsgHandler;
 	private ImageView card1;
 	private ImageView card2;	
+	private Drawable hiddenCard1;
+	private Drawable hiddenCard2;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_player);
-		
+		hiddenCard1= getResources().getDrawable(R.drawable.back_card);
+		hiddenCard2 = getResources().getDrawable(R.drawable.back_card);
 		card1 = (ImageView) findViewById(R.id.playerCard1);
 		card1.setVisibility(View.INVISIBLE);
 		card2 = (ImageView) findViewById(R.id.playerCard2);
@@ -155,6 +168,97 @@ public class PlayerActivity extends PokerActivity {
 		}
 	}
 	
+	public void raise(View view) {
+		System.out.println("Player : PAY CASH");
+		card1.setImageResource(R.drawable.card_10_1);
+		card1.setVisibility(View.VISIBLE);
+		card2.setVisibility(View.VISIBLE);
+		
+		
+		
+		final int minBid = 0; //should be = to call
+		final int maxbid = 1000000;//equal to pot? depending on rule!
+		 
+
+	    LayoutInflater inflater = (LayoutInflater)
+			    getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			    View npView = inflater.inflate(R.layout.number_picker_dialog_layout, null);
+			   //  new TimePickerDialog(this, null, 0, 0, true).show();
+			    new AlertDialog.Builder(this)
+			        .setTitle("Place Bid:")
+			        .setView(npView)
+			        .setPositiveButton("Bid",
+			            new DialogInterface.OnClickListener() {
+			                public void onClick(DialogInterface dialog, int whichButton) {
+			                	
+			                int bid = 10;
+			                		//((NumberPicker) findViewById(R.layout.number_picker_dialog_layout)).getValue();
+			                	 //TODO take the value from dialog, but... WTF i should put in here?????
+			            		if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(bid)))) {
+			            			PokerObjects.getPlayer().removeCash(10.f);
+			            			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
+			            			Toast.makeText(getApplicationContext(), "bid of "+bid+" placed", Toast.LENGTH_LONG).show();
+			            		} else {
+			            			log("Server not reachable.");
+			            		}
+			                			
+			                }
+			            })
+			            .setNegativeButton("Cancel",
+			                new DialogInterface.OnClickListener() {
+			                    public void onClick(DialogInterface dialog, int whichButton) {
+			                    }
+			                })
+			            .show();
+		
+		
+//		//Credit the Pot by 10 chf
+	}
+	
+	public void fold(View view) {
+
+		card1.setImageResource(getResources().
+		         getIdentifier("drawable/card_14_4", null, this.getPackageName()));
+		card2.setImageResource(R.drawable.card_2_4);
+
+		card1.setVisibility(View.VISIBLE);
+		card2.setVisibility(View.VISIBLE);
+//		System.out.println("Player : PAY CASH");
+//		card1.setVisibility(View.VISIBLE);
+//		card2.setVisibility(View.VISIBLE);
+//		//Credit the Pot by 10 chf
+//		if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(10)))) {
+//			PokerObjects.getPlayer().removeCash(10.f);
+//			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
+//		} else {
+//			log("Server not reachable.");
+//		}
+	}
+	public void call(View view) {
+		HideShowCards();
+//		System.out.println("Player : PAY CASH");
+//		card1.setVisibility(View.VISIBLE);
+//		card2.setVisibility(View.VISIBLE);
+//		//Credit the Pot by 10 chf
+//		if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(10)))) {
+//			PokerObjects.getPlayer().removeCash(10.f);
+//			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
+//		} else {
+//			log("Server not reachable.");
+//		}
+	}
+	
+	
+	public void HideShowCards(){
+		Drawable temp = hiddenCard1;
+		hiddenCard1 = card1.getDrawable();
+		card1.setImageDrawable(temp);
+		temp = hiddenCard2;
+		hiddenCard2 = card2.getDrawable();
+		card2.setImageDrawable(temp);
+		
+	}
+	
 	private void log(String text) {
 		((TextView) findViewById(R.id.txtStatusPlayer)).setText("Status : " + text);
 	}
@@ -168,7 +272,7 @@ public class PlayerActivity extends PokerActivity {
 				 * @param message
 				 */
 				@Override
-				public void handleMessage(Message message) {
+				public void handleMessage(final Message message) {
 					
 					final VirtualPlayer player = PokerObjects.getPlayer();
 					
@@ -192,6 +296,32 @@ public class PlayerActivity extends PokerActivity {
 						});
 						
 						break;
+					case CARD1:
+						runOnUiThread(new Runnable() {
+						     @Override
+						     public void run() {
+
+						    	 card1.setImageResource(getResources().
+								         getIdentifier("drawable/card_"+message.getLoad(), null, getPackageName()));
+								card1.setVisibility(View.VISIBLE);
+						    }
+						});
+						
+						break;
+					case CARD2:
+						runOnUiThread(new Runnable() {
+						     @Override
+						     public void run() {
+
+						    	 card2.setImageResource(getResources().
+								         getIdentifier("drawable/card_"+message.getLoad(), null, getPackageName()));
+								card2.setVisibility(View.VISIBLE);
+						    }
+						});
+						
+						break;
+
+						
 					default:
 						break;
 						
