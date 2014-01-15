@@ -27,6 +27,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.provider.ContactsContract.CommonDataKinds.Im;
@@ -38,6 +39,7 @@ public class PlayerActivity extends PokerActivity {
 	private ImageView card2;	
 	private Drawable hiddenCard1;
 	private Drawable hiddenCard2;
+	private View bidPickerdialog;
 	
 	
 	@Override
@@ -58,7 +60,7 @@ public class PlayerActivity extends PokerActivity {
 
 		System.out.println("PlayerActivity : onCreate");
 
-		PokerObjects.getPlayer().addCash(1000.f);
+		PokerObjects.getPlayer().addCash(1000.f);//TODO attention oncreate called also when screen turn!!
 		
     	/*
     	 * Manage state of the application.
@@ -157,6 +159,8 @@ public class PlayerActivity extends PokerActivity {
 
 	public void onPayCash(View view) {
 		System.out.println("Player : PAY CASH");
+		card1.setImageResource(R.drawable.card_10_1);
+
 		card1.setVisibility(View.VISIBLE);
 		card2.setVisibility(View.VISIBLE);
 		//Credit the Pot by 10 chf
@@ -169,33 +173,60 @@ public class PlayerActivity extends PokerActivity {
 	}
 	
 	public void raise(View view) {
-		System.out.println("Player : PAY CASH");
-		card1.setImageResource(R.drawable.card_10_1);
-		card1.setVisibility(View.VISIBLE);
-		card2.setVisibility(View.VISIBLE);
+		System.out.println("Player : BID");
 		
-		
-		
+		//TODO what if minbid > maxbid???
 		final int minBid = 0; //should be = to call
-		final int maxbid = 1000000;//equal to pot? depending on rule!
-		 
-
+		final int maxBid = (int) PokerObjects.getPlayer().getCash();// all in? equal to pot? depending on rule!
+		
+		if(minBid>=maxBid){//only solution is all in
+			final int  bid = maxBid;
+			
+			
+			AlertDialog dialog = new AlertDialog.Builder(this).create();
+		    dialog.setTitle("All-in?");
+		    dialog.setMessage("Choose to bet all-in or not");
+		    dialog.setCancelable(true);
+		    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int buttonId) {
+		        	
+		        }
+		    });
+		    dialog.setButton(DialogInterface.BUTTON_POSITIVE, "All-in", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int buttonId) {
+		        	if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(bid)))) {
+            			PokerObjects.getPlayer().removeCash(bid);
+            			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
+            			Toast.makeText(getApplicationContext(), "All-in placed", Toast.LENGTH_LONG).show();
+            		} else {
+            			log("Server not reachable.");
+            		}
+		        }
+		    });
+		    dialog.setIcon(android.R.drawable.ic_dialog_alert);
+		    dialog.show();
+		} else {
+		
+		
+		
+		
+		
+		
 	    LayoutInflater inflater = (LayoutInflater)
 			    getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			    View npView = inflater.inflate(R.layout.number_picker_dialog_layout, null);
+			    bidPickerdialog = inflater.inflate(R.layout.number_picker_dialog_layout, null);
 			   //  new TimePickerDialog(this, null, 0, 0, true).show();
 			    new AlertDialog.Builder(this)
 			        .setTitle("Place Bid:")
-			        .setView(npView)
+			        .setView(bidPickerdialog)
 			        .setPositiveButton("Bid",
 			            new DialogInterface.OnClickListener() {
 			                public void onClick(DialogInterface dialog, int whichButton) {
 			                	
-			                int bid = 10;
-			                		//((NumberPicker) findViewById(R.layout.number_picker_dialog_layout)).getValue();
-			                	 //TODO take the value from dialog, but... WTF i should put in here?????
+			                int bid;
+			                bid = ((NumberPicker) bidPickerdialog.findViewById(R.id.nbPicker)).getValue();
 			            		if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(bid)))) {
-			            			PokerObjects.getPlayer().removeCash(10.f);
+			            			PokerObjects.getPlayer().removeCash(bid);
 			            			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
 			            			Toast.makeText(getApplicationContext(), "bid of "+bid+" placed", Toast.LENGTH_LONG).show();
 			            		} else {
@@ -210,9 +241,12 @@ public class PlayerActivity extends PokerActivity {
 			                    }
 			                })
 			            .show();
-		
-		
-//		//Credit the Pot by 10 chf
+			    
+			    ((NumberPicker) bidPickerdialog).setMaxValue(maxBid);
+			    ((NumberPicker) bidPickerdialog).setMinValue(minBid);
+			    ((NumberPicker) bidPickerdialog).setBackgroundColor(Color.BLACK);
+		}
+
 	}
 	
 	public void fold(View view) {

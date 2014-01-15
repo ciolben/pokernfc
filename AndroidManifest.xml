@@ -32,7 +32,8 @@
             android:name="ch.epfl.pokernfc.PotActivity"
             android:label="@string/title_activity_pot"
             android:launchMode="singleInstance"
-            android:parentActivityName="ch.epfl.pokernfc.MainActivity" >
+            android:parentActivityName="ch.epfl.pokernfc.MainActivity" 
+            android:configChanges="orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ch.epfl.pokernfc.MainActivity" />
@@ -41,7 +42,8 @@
             android:name="ch.epfl.pokernfc.PlayerActivity"
             android:label="@string/title_activity_player"
             android:launchMode="singleInstance"
-            android:parentActivityName="ch.epfl.pokernfc.MainActivity" >
+            android:parentActivityName="ch.epfl.pokernfc.MainActivity"
+             android:configChanges="orientation|screenSize" >
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
