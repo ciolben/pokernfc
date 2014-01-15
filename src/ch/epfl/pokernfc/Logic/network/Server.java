@@ -101,14 +101,15 @@ public class Server extends NetworkComponent {
 						while (connection.messageAvailable() && (line = connection.readLine()) != null) {
 //							Log.d("ServerActivity", line);//////////
 
-
 							// DO WHATEVER YOU WANT TO THE FRONT END
 							// THIS IS WHERE YOU CAN BE CREATIVE
 							System.out.println("server received: "+ line);
 							if (line != null) {
 								//give content to Pot
 								for (NetworkMessageHandler handler : getMessageHandlers()) {
-									handler.handleMessage(new Message(line));
+									Message message = new Message(line);
+									message.setSource(connection.getPlayerID());
+									handler.handleMessage(message);
 								}
 							}
 
