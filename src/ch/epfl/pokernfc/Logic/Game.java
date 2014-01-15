@@ -77,6 +77,7 @@ public class Game {
 		SMALL, BIG, BID
 	}
 	private BIDTYPE mCurrentBidType;
+	private float mCurrentBid;
 	
 	public Game() {
 		mIds = new HashSet<Integer>();
@@ -191,9 +192,8 @@ public class Game {
 		//start preflop tour
 		mCurrentTour = TOUR.PREFLOP;
 		
-		//ask small blind first (and so start the state machine)
-		PokerState.getGameServer().sendMessage(getCurrentPlayerID(),
-				new Message(Message.MessageType.ASKBLIND, String.valueOf(mSmallBlind)));
+		//will ask small blind first (and so start the state machine)
+		preflop();
 		
 		return true;
 	}
@@ -203,7 +203,14 @@ public class Game {
 		
 		switch (mCurrentBidType) {
 		case SMALL:
-			
+			//check if the current bid = small blind
+			if (mCurrentBid == mSmallBlind) {
+				//we can process to big blind
+				mCurrentBidType = BIDTYPE.BIG;
+				preflop();
+			}
+			PokerState.getGameServer().sendMessage(getCurrentPlayerID(),
+					new Message(Message.MessageType.ASKBLIND, String.valueOf(mSmallBlind)));
 			break;
 		case BIG:
 			
@@ -212,6 +219,10 @@ public class Game {
 			
 			break;
 		}
+	}
+	
+	private boolean checkTurn() {
+		return true;
 	}
 	
 	/**
