@@ -164,7 +164,8 @@ public class PlayerActivity extends PokerActivity {
 		card1.setVisibility(View.VISIBLE);
 		card2.setVisibility(View.VISIBLE);
 		//Credit the Pot by 10 chf
-		if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(10)))) {
+		Client client = PokerState.getGameClient();
+		if ((client != null) && client.sendMessage(new Message(Message.MessageType.BID, String.valueOf(10)))) {
 			PokerObjects.getPlayer().removeCash(10.f);
 			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
 		} else {
@@ -314,6 +315,8 @@ public class PlayerActivity extends PokerActivity {
 					case UNKNOWN:
 						/*do nothing*/
 						break;
+					case ACK:
+						log("Connected to server.");
 					case REFUND:
 						float amount = Float.parseFloat(message.getLoad());
 						
@@ -354,8 +357,9 @@ public class PlayerActivity extends PokerActivity {
 						});
 						
 						break;
-
-						
+					case ERROR:
+						log(message.getLoad());
+						break;
 					default:
 						break;
 						

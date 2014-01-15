@@ -2,11 +2,19 @@ package ch.epfl.pokernfc.Logic;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+
+import android.util.Pair;
 
 import ch.epfl.pokernfc.PokerState;
 import ch.epfl.pokernfc.Logic.network.Message;
 import ch.epfl.pokernfc.Logic.network.NetworkMessageHandler;
 import ch.epfl.pokernfc.Logic.network.Server;
+import ch.epfl.pokernfc.Logic.network.Message.MessageType;
+import ch.epfl.pokernfc.Logic.texasholdem.Card;
+import ch.epfl.pokernfc.Logic.texasholdem.Deck;
+import ch.epfl.pokernfc.Logic.texasholdem.GameUtils;
+import ch.epfl.pokernfc.Logic.texasholdem.Player;
 
 /***
  * This class includes the game logic used by the Pot.
@@ -64,6 +72,11 @@ public class Game {
 	private ArrayList<Integer> mIdsOrder; //for game order
 	private int mIterator = 0;
 	
+	//poker stuff
+	private ArrayList<Player> mPlayers;
+	private ArrayList<Card> mCommunityCards;
+	private Deck mDeck;
+	
 	//communication
 	private NetworkMessageHandler mMessageHandler = null;
 	
@@ -85,11 +98,22 @@ public class Game {
 	public Game() {
 		mIds = new HashSet<Integer>();
 		mIdsOrder = new ArrayList<Integer>();
+		
+		mForfeited = new ArrayList<Integer>();
+		
+		mPlayers = new ArrayList<Player>();
+		mCommunityCards = new ArrayList<Card>();
+		
+		//create deck (need it before because "registerNextPlayerID" needs the deck).
+		mDeck = new Deck();
+		mDeck.shuffleDeck();
 	}
 	
 	//game settings
 	private int mSmallBlind = 5;
 	private int mBigBlind = 10;
+	private boolean mCardsDistributed = false;
+	private boolean mGameEnded = false;
 	
 	/***
 	 * Register a player id for the game logic.
@@ -100,9 +124,7 @@ public class Game {
 		++mNumberOfPlayer;
 		
 		if (mNumberOfPlayer == 1) {
-			mIds.add(1);
-			mIdsOrder.add(1);
-			return 1;
+			return regID(1);
 		}
 		
 		int lastPlusOne = mIdsOrder.get(mNumberOfPlayer - 2); //-1 for 0-based, -1 for ++ before
@@ -111,16 +133,12 @@ public class Game {
 			if (mLastFreeId != -1 && !mIds.contains(Integer.valueOf(mLastFreeId))) {
 				int id = mLastFreeId;
 				mLastFreeId = -1;
-				mIds.add(id);
-				mIdsOrder.add(id);
-				return id;
+				return regID(id);
 			}
 			//costly, first players are likely to quit first
 			for (int freeId = 1; freeId <= MAXPLAYER; ++freeId) {
 				if (!mIds.contains(Integer.valueOf(freeId))) {
-					mIds.add(freeId);
-					mIdsOrder.add(freeId);
-					return freeId;
+					return regID(freeId);
 				}
 			}
 			
@@ -129,10 +147,46 @@ public class Game {
 			return -1;
 			
 		} else {
-			mIds.add(lastPlusOne);
-			mIdsOrder.add(lastPlusOne);
-			return lastPlusOne;
+			return regID(lastPlusOne);
 		}
+	}
+	
+	private int regID(int id) {
+		//register the id
+		mIds.add(id);
+		mIdsOrder.add(id);
+		
+		//register player object for determining the winner later
+		Player player = new Player(String.valueOf(id));
+		mPlayers.add(player);
+		
+		//draw two cards from the deck
+		//this is not the normal order (switched to the "real" version).
+//		List<Card> playerHand = new ArrayList<Card>();
+//		playerHand.add(mDeck.getCards().remove(0));
+//		playerHand.add(mDeck.getCards().remove(0));
+//		player.setHand(playerHand);
+		
+		return id;
+	}
+	
+	/**
+	 * Retrieve the pair of cards for a player id.
+	 * @param id
+	 * @return Pair's content can be null if the game has not started
+	 */
+	public Pair<Card, Card> getPair(int id) {
+		Card card1, card2;
+		//Need to actively search (unless a hashmap is used)
+		for (int i = 0; i < mIdsOrder.size(); ++i) {
+			if (mIdsOrder.get(i) == id) {
+				List<Card> hand = mPlayers.get(i).getHand();
+				card1 = hand.get(0);
+				card2 = hand.get(1);
+				return new Pair<Card, Card>(card1, card2);
+			}
+		}
+		return null;
 	}
 	
 	/***
@@ -205,6 +259,8 @@ public class Game {
 		
 		//init state vars
 		mConsecutiveFollow = 0;
+		mCardsDistributed = false;
+		mGameEnded = false;
 		mForfeited = new ArrayList<Integer>();
 		mPlayerBids = new ArrayList<Float>();
 		mPlayerBids.ensureCapacity(mIdsOrder.size());
@@ -320,6 +376,39 @@ public class Game {
 //			} else {
 //				bidtour(value);
 //			}
+			
+			//need to send the cards
+			//at each round, one card is given to the player, starting from the small blind
+			
+			if (!mCardsDistributed ) {
+				mCardsDistributed = true;
+				//first round
+				for (int i = 0; i < mNumberOfPlayer; ++i) {
+					int id = mIdsOrder.get(i + mLastDealer + 1 % mNumberOfPlayer);
+					List<Card> playerHand = new ArrayList<Card>();
+					Card card1 = mDeck.getCards().remove(0);
+					playerHand.add(card1);
+					Player player = mPlayers.get(i);
+					player.setHand(playerHand);
+					PokerState.getGameClient().sendMessage(
+							new Message(MessageType.CARD1, card1.getValue().getSuitValue()
+									+ "_" + card1.getSuit().getSuitValue()));
+				}
+				//second round
+				for (int i = 0; i < mNumberOfPlayer; ++i) {
+					int id = mIdsOrder.get(i + mLastDealer % mNumberOfPlayer);
+					Player player = mPlayers.get(i);
+					List<Card> playerHand = player.getHand();
+					Card card2 = mDeck.getCards().remove(0);
+					playerHand.add(card2);
+					PokerState.getGameClient().sendMessage(
+							new Message(MessageType.CARD2, card2.getValue().getSuitValue()
+									+ "_" + card2.getSuit().getSuitValue()));
+				}
+				
+			}
+			
+			//will begin at UTG (Under The Gun position)
 			bidtour(value);
 		}
 		
@@ -327,6 +416,7 @@ public class Game {
 	
 	private void bidtour(float value) {
 		Server server = PokerState.getGameServer();
+		Card card;
 		
 		if (mCurrentBidType != BIDTYPE.BID) {
 			System.err.println("ERROR bidtour (BIDTYPE != BID)");
@@ -354,20 +444,78 @@ public class Game {
 				case PREFLOP:
 					mCurrentTour = TOUR.FLOP;
 					System.out.println("Start of FLOP tour");
-					System.out.println("Link new 3 cards view HERE");
+					
+					//burn a card
+					mDeck.getCards().remove(0);
+					
+					//draw the flop
+					card = mDeck.getCards().remove(0);
+					mCommunityCards.add(card);
+					server.localSend(new Message(MessageType.CARD1, card.getValue().getSuitValue()
+							+ "_" + card.getSuit().getSuitValue()));
+					card = mDeck.getCards().remove(0);
+					mCommunityCards.add(card);
+					server.localSend(new Message(MessageType.CARD1, card.getValue().getSuitValue()
+							+ "_" + card.getSuit().getSuitValue()));
+					card = mDeck.getCards().remove(0);
+					mCommunityCards.add(card);
+					server.localSend(new Message(MessageType.CARD1, card.getValue().getSuitValue()
+							+ "_" + card.getSuit().getSuitValue()));
+					
 					break;
 				case FLOP:
 					mCurrentTour = TOUR.TURN;
 					System.out.println("Start of TURN tour");
-					System.out.println("Link new card view HERE");
+					
+					//burn a card
+					mDeck.getCards().remove(0);
+					
+					//draw the flop
+					card = mDeck.getCards().remove(0);
+					mCommunityCards.add(card);
+					server.localSend(new Message(MessageType.CARD1, card.getValue().getSuitValue()
+							+ "_" + card.getSuit().getSuitValue()));
+
 					break;
 				case TURN:
 					mCurrentTour = TOUR.RIVER;
 					System.out.println("Start of RIVER tour");
-					System.out.println("Link new card view HERE");
+					
+					//burn a card
+					mDeck.getCards().remove(0);
+					
+					//draw the flop
+					card = mDeck.getCards().remove(0);
+					mCommunityCards.add(card);
+					server.localSend(new Message(MessageType.CARD1, card.getValue().getSuitValue()
+							+ "_" + card.getSuit().getSuitValue()));
+					
 					break;
 				case RIVER:
 					System.out.println("Determining who is winner");
+					
+					GameUtils utils = new GameUtils();
+					utils.setDeck(mDeck);
+					utils.setPlayers(mPlayers);
+					utils.setCommunityCards(mCommunityCards);
+					
+					//TODO : enhance this method to find possible draw(s)
+					Player winner = utils.determineWinner();
+					
+					//will give him the Pot
+					int wid = Integer.parseInt(winner.getName());
+					
+					//refund player
+					float cash = PokerObjects.getPot().clear();
+					server.sendMessage(wid,
+							new Message(Message.MessageType.REFUND,
+									String.valueOf(cash)));
+					
+					//update pot
+					server.localSend(new Message(MessageType.REFUND, "0"));
+					
+					mGameEnded  = true;
+					
 					break;
 				}
 				//must start left from dealer
@@ -414,10 +562,20 @@ public class Game {
 			@Override
 			public void handleMessage(Message message) {
 
+				//check if start game should be called first
+				if (mGameEnded) {
+					System.out.println("Call start game first");
+					PokerState.getGameServer().sendMessage(getCurrentPlayerID(),
+							new Message(Message.MessageType.ERROR, "Reset Pot first"));
+					return;
+				}
+				
 				//check if current player has the right to play
 				if (!checkTurn(message.getSource())) {
 					//TODO : refund maybe
 					System.out.println("Wrong player turn : " + message.getSource() + ", expected : " + getCurrentPlayerID());
+					PokerState.getGameServer().sendMessage(getCurrentPlayerID(),
+							new Message(Message.MessageType.ERROR, "Not your turn."));
 					return;
 				}
 				

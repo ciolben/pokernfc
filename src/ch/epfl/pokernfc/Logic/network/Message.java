@@ -8,7 +8,8 @@ public class Message{
 	public static enum MessageType {
 		//enum		descr						sens (server <--> player)
 	    UNKNOWN, 	//unknown message			<-->
-	    INIT,		//
+	    INIT,		//initial session			<-->
+	    ERROR,		//error message				<-->
 	    CARD1,		//send card1  				-->
 	    CARD2,		//send card2  				-->
 	    BID,		//send a bid				<--

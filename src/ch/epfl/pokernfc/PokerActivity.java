@@ -76,7 +76,7 @@ public abstract class PokerActivity extends BeamActivity {
     }
     
     /**
-     * Helper
+     * Helper (for Status Text View mainly)
      * @param viewID
      * @param content
      */

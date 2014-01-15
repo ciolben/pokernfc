@@ -14,17 +14,18 @@ public class GameUtils
   
   public GameUtils ()
   {
-    for (int i=1; i<=4; i++)
-      players.add(new Player("player"+i));
-    
-    deck = new Deck();
-    deck.shuffleDeck();
-    
-    deal();
-    System.out.println(determineWinner());
+//    for (int i=1; i<=4; i++)
+//      players.add(new Player("player"+i));
+//    
+//    deck = new Deck();
+//    deck.shuffleDeck();
+//    
+//    deal();
+//    System.out.println(determineWinner());
   }
   
-  String determineWinner()
+  //CHANGED : String -> Player
+  public Player determineWinner()
   {
     int winningPlayerHandStrength = 0;
     List<Card> winningPlayerWinningCards = null;
@@ -124,10 +125,11 @@ public class GameUtils
       System.out.println(card);
     }
     System.out.println();
-    if (draw)
-     return "There was a draw with hand: " + winningPlayer.getPlayerHandStrength();
-    else
-      return winningPlayer + " wins with " + winningPlayer.getPlayerHandStrength() + kicker;
+//    if (draw)
+//     return "There was a draw with hand: " + winningPlayer.getPlayerHandStrength();
+//    else
+//      return winningPlayer + " wins with " + winningPlayer.getPlayerHandStrength() + kicker;
+    return winningPlayer;
   }
 
   ActualPokerHand checkForHand(List<Card> hand, List<Card> communityCards)

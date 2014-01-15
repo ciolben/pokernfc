@@ -1,26 +1,23 @@
 package ch.epfl.pokernfc;
 
-import ch.epfl.pokernfc.Logic.VirtualPlayer;
-import ch.epfl.pokernfc.Logic.PokerObjects;
-import ch.epfl.pokernfc.Logic.Pot;
-import ch.epfl.pokernfc.Logic.network.Message;
-import ch.epfl.pokernfc.Logic.network.NetworkMessageHandler;
-import ch.epfl.pokernfc.Utils.MessageUtils;
-import ch.epfl.pokernfc.Utils.NFCUtils;
+import android.annotation.TargetApi;
+import android.content.Intent;
 import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcEvent;
+import android.os.Build;
 import android.os.Bundle;
-import android.app.Activity;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.support.v4.app.NavUtils;
-import android.annotation.TargetApi;
-import android.content.Intent;
-import android.os.Build;
+import ch.epfl.pokernfc.Logic.Game;
+import ch.epfl.pokernfc.Logic.PokerObjects;
+import ch.epfl.pokernfc.Logic.Pot;
+import ch.epfl.pokernfc.Logic.network.Message;
+import ch.epfl.pokernfc.Logic.network.NetworkMessageHandler;
+import ch.epfl.pokernfc.Utils.MessageUtils;
 
 public class PotActivity extends PokerActivity {
 
@@ -156,10 +153,10 @@ public class PotActivity extends PokerActivity {
 	}
 
 	/**
-	 * Test for network
+	 * For sharing the pot
 	 * @param view
 	 */
-	public void onShare(View view) {
+	public void reditributeCash() {
 		System.out.println("PotActivity : onShare");
 		
 		int numberOfPlayer = PokerObjects.getGame().getNumberOfPlayer();
@@ -176,6 +173,12 @@ public class PotActivity extends PokerActivity {
 				log("Cannot refund player " + id + " with " + Math.floor(capital / numberOfPlayer) + " chf");
 			}
 		}
+	}
+	
+	public void onStartGame(View view) {
+		Game game = PokerObjects.getGame();
+		game.startGame();
+		log("Game started.");
 	}
 	
 	private void log(String text) {
@@ -204,7 +207,7 @@ public class PotActivity extends PokerActivity {
 						float amount = Float.parseFloat(message.getLoad());
 						
 						//update cash
-						pot.addCash(amount);
+						//pot.addCash(amount); done Game side
 						
 						//update view
 						runOnUiThread(new Runnable() {
@@ -218,9 +221,16 @@ public class PotActivity extends PokerActivity {
 						});
 						
 						break;
+					//next card
+					//0 : erase, others, add new card	
+					case CARD1:
+						String card = message.getLoad();
+						//TODO 
+					//remove cash from Pot
+					case REFUND:
+						updateUiTextView(R.id.tvValue, String.valueOf(pot.getCash()));
 					default:
 						break;
-						
 					}
 						
 				}

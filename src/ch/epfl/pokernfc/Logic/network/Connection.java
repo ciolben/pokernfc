@@ -37,7 +37,6 @@ public class Connection {
 			
 			sendMessage(new Message(MessageType.ACK, "server ack"));
 
-			
 			//connection ok:
 			updateLastSeen();
 			

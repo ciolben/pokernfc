@@ -118,7 +118,7 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onShare"
-        android:text="Redistribute Cash" />
+        android:onClick="onStartGame"
+        android:text="Start Game" />
 
 </LinearLayout>
