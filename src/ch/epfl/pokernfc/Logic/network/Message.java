@@ -6,24 +6,29 @@ package ch.epfl.pokernfc.Logic.network;
  */
 public class Message{
 	public static enum MessageType {
-	    UNKNOWN, 	//unknown message
+		//enum		descr						sens (server <--> player)
+	    UNKNOWN, 	//unknown message			<-->
 	    INIT,		//
-	    CARD1,		//send card1
-	    CARD2,		//send card2
-	    BID,		//send a bid
-	    ASKBLIND,	//ask for small/big blind
-	    REFUND		//send money back
-, ACK
+	    CARD1,		//send card1  				-->
+	    CARD2,		//send card2  				-->
+	    BID,		//send a bid				<--
+	    FOLD,		//player fold				<--
+	    ASKBLIND,	//ask for small/big blind	-->
+	    ASKBID,		//ask player action			-->
+	    REFUND,		//send money back			-->
+	    ACK			//Acknowledgment			-->
 	}
 	private static final String SPLITTER = "@";
 	
 
 	private String mLoad;
 	private MessageType mType;
+	private int mSrc;
 	
 	public Message(MessageType type, String load ) {
 		mType = type;
 		mLoad = load;
+		mSrc = -1;
 	}
 	
 	public Message(String message){
@@ -52,6 +57,14 @@ public class Message{
 
 	public MessageType getType() {
 		return mType;
+	}
+	
+	public void setSource(int playerID) {
+		mSrc = playerID;
+	}
+	
+	public int getSource() {
+		return mSrc;
 	}
 	
 	public String toString(){
