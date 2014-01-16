@@ -586,9 +586,14 @@ public class Game {
 				}
 				
 				//check if current player has the right to play
-				if (!checkTurn(message.getSource())) {
+				int src = message.getSource();
+				if (!checkTurn(src)) {
+					if (src == -1) {
+						//message not for the Game engine
+						return;
+					}
 					//TODO : refund maybe
-					System.out.println("Wrong player turn : " + message.getSource() + ", expected : " + getCurrentPlayerID());
+					System.out.println("Wrong player turn : " + src + ", expected : " + getCurrentPlayerID());
 					PokerState.getGameServer().sendMessage(getCurrentPlayerID(),
 							new Message(Message.MessageType.ERROR, "Not your turn."));
 					return;

@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -444,6 +445,13 @@ public class PlayerActivity extends PokerActivity {
 					case ASKBID:
 						System.out.println("ASKBID");
 						log("BID at least : " + message.getLoad());
+						if (Float.valueOf(message.getLoad()) == 0) {
+							//change text into check
+							((Button)findViewById(R.id.buttonCall)).setText("Check");
+						} else {
+							//change text into call
+							((Button)findViewById(R.id.buttonCall)).setText("Call");
+						}
 						PokerObjects.getPlayer().setFollowAmount(Float.parseFloat(message.getLoad()));
 						break;
 					case REFUND:

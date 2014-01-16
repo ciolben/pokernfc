@@ -282,12 +282,12 @@ initCard();
 								getIdentifier("drawable/card_"+message.getLoad(), null,getPackageName())));
 								tempCard.setVisibility(View.VISIBLE);
 								if(tempCard == card1) tempCard = card2;
-								if(tempCard == card2) tempCard = card3;
-								if(tempCard == card3) tempCard = card4;
-								if(tempCard == card4) tempCard = card5;
+								else if(tempCard == card2) tempCard = card3;
+								else if(tempCard == card3) tempCard = card4;
+								else if(tempCard == card4) tempCard = card5;
 						     }
 						});
-						
+						break;
 					case END:
 						runOnUiThread(new Runnable() {
 						     @Override

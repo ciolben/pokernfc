@@ -112,7 +112,7 @@
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/btPayCash"
                         android:onClick="call"
-            android:text="Call" />
+            android:text="@string/call" />
         <Button
             android:id="@+id/buttonRaise"
             android:layout_width="wrap_content"
