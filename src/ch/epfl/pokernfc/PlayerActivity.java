@@ -251,6 +251,7 @@ public class PlayerActivity extends PokerActivity {
 	
 	public void raise(View view) {
 		System.out.println("Player : BID");
+		final VirtualPlayer player = PokerObjects.getPlayer();
 		
 		//TODO what if minbid > maxbid???
 		final float minBid = PokerObjects.getPlayer().getFolowAmount(); //should be = to call
@@ -274,7 +275,9 @@ public class PlayerActivity extends PokerActivity {
 		        	if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(bid)))) {
             			PokerObjects.getPlayer().removeCash(bid);
             			log("I've bid " + bid + ".-");
-            			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
+            			player.removeCash(bid);
+            			TextView tv = (TextView) findViewById(R.id.tvCashValue);
+            			tv.setText(String.valueOf(player.getCash()));
             			Toast.makeText(getApplicationContext(), "All-in placed", Toast.LENGTH_LONG).show();
             		} else {
             			log("Server not reachable.");
@@ -305,7 +308,9 @@ public class PlayerActivity extends PokerActivity {
 			                bid = ((NumberPicker) bidPickerdialog.findViewById(R.id.nbPicker)).getValue();
 			            		if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(bid)))) {
 			            			PokerObjects.getPlayer().removeCash(bid);
-			            			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
+			            			log("I've bid " + bid + ".-");
+			            			player.removeCash(bid);
+			            			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(player.getCash()));
 			            			Toast.makeText(getApplicationContext(), "bid of "+bid+" placed", Toast.LENGTH_LONG).show();
 			            		} else {
 			            			log("Server not reachable.");
@@ -357,6 +362,9 @@ public class PlayerActivity extends PokerActivity {
 				String.valueOf(amount)));
 		
 		log("I'v bid " + amount + ".-");
+		
+		PokerObjects.getPlayer().removeCash(amount);
+		((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
 //		System.out.println("Player : PAY CASH");
 //		card1.setVisibility(View.VISIBLE);
 //		card2.setVisibility(View.VISIBLE);
