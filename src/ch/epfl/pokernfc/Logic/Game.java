@@ -197,8 +197,11 @@ public class Game {
 		//Integer are compared by the equals method, thus by their value, not by their address.
 		boolean ok = mIds.remove(Integer.valueOf(id));
 		if (ok) {
-			mIdsOrder.remove(Integer.valueOf(id));
-			mPlayers.remove(Integer.valueOf(id));
+//			mIdsOrder.remove(Integer.valueOf(id));
+//			mPlayers.remove(Integer.valueOf(id));
+			System.out.println("Id  removed : "+ mIdsOrder.remove(Integer.valueOf(id)));
+			System.out.println("Player removed : "+ mPlayers.remove(Integer.valueOf(id)));
+			System.out.println("Player size : " + mPlayers.size());
 			mLastFreeId = id;
 			mIterator = 0; //reset the iterator
 			--mNumberOfPlayer;
@@ -501,6 +504,9 @@ public class Game {
 					System.out.println("Determining who is winner");
 					
 					GameUtils utils = new GameUtils();
+					System.out.println("Create game utils : mDeck size : " + mDeck
+							+ " mPlayers size : " + mPlayers.size() + " mCommunityCards size : "
+							+ mCommunityCards.size());
 					utils.setDeck(mDeck);
 					utils.setPlayers(mPlayers);
 					utils.setCommunityCards(mCommunityCards);

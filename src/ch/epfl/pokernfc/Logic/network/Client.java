@@ -65,6 +65,8 @@ public class Client extends NetworkComponent {
 						for (NetworkMessageHandler handler : getMessageHandlers()) {
 							handler.handleMessage(new Message(content));
 						}
+					} else {
+						break;
 					}
 					//}
 					
