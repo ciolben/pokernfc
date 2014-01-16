@@ -17,8 +17,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="top|right">
-        
+        android:gravity="top|right" >
+
         <TextView
             android:id="@+id/tvCurrentPot"
             android:layout_width="wrap_content"
@@ -26,7 +26,6 @@
             android:text="@string/textview_currentpot"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/white" />
-
 
         <TextView
             android:id="@+id/tvValue"
@@ -36,8 +35,6 @@
             android:text="@string/textview_potvalue"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="italic" />
-
-       
     </LinearLayout>
 
     <TextView
@@ -45,15 +42,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|left"
-        
         android:text="Status : nothing to display"
         android:textColor="@android:color/white" />
 
     <Space
         android:layout_width="match_parent"
-                        android:layout_weight="2"
-        
-        android:layout_height="0dip" />
+        android:layout_height="0dip"
+        android:layout_weight="2" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -66,82 +61,65 @@
 
         <ImageView
             android:id="@+id/potCard1"
-        android:layout_width="0dip"
+            android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_gravity="left|top"
+            android:layout_weight="1"
             android:scaleType="centerInside"
-                    android:layout_weight="1"
-            
             android:src="@drawable/back_card" />
 
         <ImageView
             android:id="@+id/potCard2"
-        android:layout_width="0dip"
-                                android:layout_weight="1"
-            
+            android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_gravity="left|top"
-            android:scaleType="centerInside"
+            android:layout_toRightOf="@+id/potCard1"
+            android:layout_weight="1"
             android:src="@drawable/back_card" />
 
         <ImageView
             android:id="@+id/potCard3"
-        android:layout_width="0dip"
-                            android:layout_weight="1"
-        
+            android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_gravity="left|top"
-            android:scaleType="centerInside"
+            android:layout_toRightOf="@+id/potCard2"
+            android:layout_weight="1"
             android:src="@drawable/back_card" />
 
         <ImageView
             android:id="@+id/potCard4"
-        android:layout_width="0dip"
-                            android:layout_weight="1"
-        
+            android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_gravity="left|top"
-            android:scaleType="centerInside"
+            android:layout_toRightOf="@+id/potCard3"
+            android:layout_weight="1"
             android:src="@drawable/back_card" />
 
         <ImageView
             android:id="@+id/potCard5"
-        android:layout_width="0dip"
-                            android:layout_weight="1"
-        
+            android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_gravity="left|top"
-            android:scaleType="centerInside"
+            android:layout_toRightOf="@+id/potCard4"
+            android:layout_weight="1"
             android:src="@drawable/back_card" />
-
     </LinearLayout>
 
-
-
     <LinearLayout
-                android:layout_weight="20"
-        
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:gravity="bottom|left"
         android:layout_gravity="bottom|center_horizontal"
-         >
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:onClick="onStartGame"     
-        
-        android:text="Start Game" />
+        android:layout_weight="20"
+        android:gravity="bottom|left" >
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onNonNFCClient"
-        android:text="Add Player" />
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onStartGame"
+            android:text="Start Game" />
 
-        </LinearLayout>
-    
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onNonNFCClient"
+            android:text="Add Player" />
+    </LinearLayout>
 
 </LinearLayout>
