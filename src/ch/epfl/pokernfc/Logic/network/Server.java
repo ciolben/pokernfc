@@ -250,6 +250,7 @@ public class Server extends NetworkComponent {
 			}
 			boolean writeOK = false;
 			//write the message:
+			System.out.println("MESSAGE SENT TO " + id + " | content : " + outgoingMsg);
 			writeOK = connection.sendMessage(outgoingMsg);
 			if(writeOK) {
 					connection.updateLastSeen();

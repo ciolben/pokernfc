@@ -200,6 +200,7 @@ public class Game {
 			mIdsOrder.remove(Integer.valueOf(id));
 			mPlayers.remove(Integer.valueOf(id));
 			mLastFreeId = id;
+			mIterator = 0; //reset the iterator
 			--mNumberOfPlayer;
 		}
 		return ok;
