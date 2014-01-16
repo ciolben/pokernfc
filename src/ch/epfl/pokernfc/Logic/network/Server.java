@@ -24,7 +24,6 @@ import ch.epfl.pokernfc.Logic.network.Message.MessageType;
 
 public class Server extends NetworkComponent {
 
-//	private Handler mHandler;
 
 	private static final int SERVERPORT = 8765;
 	private static String serverIP;
@@ -79,7 +78,6 @@ public class Server extends NetworkComponent {
 							Message m = new Message(MessageType.FOLD, "byebye!!");
 							m.setSource(connection.getPlayerID());
 							localSend(m);
-							System.out.println("folddddd");
 							connection.close();
 							continue;
 						}
@@ -184,7 +182,6 @@ public class Server extends NetworkComponent {
 									
 								
 								lock.lock();
-								// LISTEN FOR INCOMING CLIENT
 								Socket client = serverSocket.accept();
 
 								lock.unlock();

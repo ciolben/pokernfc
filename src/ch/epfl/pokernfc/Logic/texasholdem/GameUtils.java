@@ -5,7 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * 
+ * @author http://howtoprogramwithjava.com/java-practice-assignment-6/
+ *
+ */
 public class GameUtils
 {
   private Deck deck;
