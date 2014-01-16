@@ -413,6 +413,8 @@ public class PlayerActivity extends PokerActivity {
 					case CARD2:
 						setCard(message);
 						break;
+					case END:
+						
 					case ERROR:
 						log(message.getLoad());
 						break;

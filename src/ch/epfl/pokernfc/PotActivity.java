@@ -1,6 +1,10 @@
 package ch.epfl.pokernfc;
 
+import java.util.List;
+
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcEvent;
@@ -78,6 +82,8 @@ public class PotActivity extends PokerActivity {
 			System.out.println("FATAL ERROR, next player id = 0");
 			id = 0;
 		}
+		
+		//listen to new client
 		PokerState.getGameServer().listenToNewPlayer(id);
 		
 		String ip = PokerState.getGameServer().getServerIP();
@@ -86,6 +92,24 @@ public class PotActivity extends PokerActivity {
 		mDataToSendBuffer = MessageUtils.createNFCWelcome(ip, port, id);
 		
 		}
+	}
+	
+	public void onNonNFCClient() {
+		Object[] parsed = MessageUtils.parseNFCWelcomeMessage(mDataToSendBuffer);
+		int wantedID = (Integer) parsed[2];
+		AlertDialog dialog = new AlertDialog.Builder(this).create();
+	    dialog.setTitle("Connect to server");
+	    dialog.setMessage("Use this id : " + wantedID);
+	    dialog.setCancelable(false);
+	    dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int buttonId) {
+	        	
+	        }
+	    });
+	    dialog.setIcon(android.R.drawable.ic_dialog_alert);
+	    dialog.show();
+	    mDataToSendBuffer = "";
+	    prepareNextWelcomeMessage();
 	}
 	
 	/**
@@ -177,6 +201,18 @@ public class PotActivity extends PokerActivity {
 	
 	public void onStartGame(View view) {
 		Game game = PokerObjects.getGame();
+		
+		//remove unconnected clients
+		List<Integer> connected = PokerState.getGameServer().getConnectedIds();
+		List<Integer> registered = game.getRegisteredIds();
+		
+		for (Integer id : registered) {
+			if (!connected.contains(id)) {
+				game.revokePlayer(id);
+				System.out.println("PotActivity : removed unconnected player " + id);
+			}
+		}
+		
 		game.startGame();
 		log("Game started.");
 	}

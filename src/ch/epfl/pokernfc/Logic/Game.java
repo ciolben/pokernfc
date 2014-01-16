@@ -5,12 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 
 import android.util.Pair;
-
 import ch.epfl.pokernfc.PokerState;
 import ch.epfl.pokernfc.Logic.network.Message;
+import ch.epfl.pokernfc.Logic.network.Message.MessageType;
 import ch.epfl.pokernfc.Logic.network.NetworkMessageHandler;
 import ch.epfl.pokernfc.Logic.network.Server;
-import ch.epfl.pokernfc.Logic.network.Message.MessageType;
 import ch.epfl.pokernfc.Logic.texasholdem.Card;
 import ch.epfl.pokernfc.Logic.texasholdem.Deck;
 import ch.epfl.pokernfc.Logic.texasholdem.GameUtils;
@@ -199,10 +198,15 @@ public class Game {
 		boolean ok = mIds.remove(Integer.valueOf(id));
 		if (ok) {
 			mIdsOrder.remove(Integer.valueOf(id));
+			mPlayers.remove(Integer.valueOf(id));
 			mLastFreeId = id;
 			--mNumberOfPlayer;
 		}
 		return ok;
+	}
+	
+	public List<Integer> getRegisteredIds() {
+		return mIdsOrder;
 	}
 	
 	public int getNumberOfPlayer() {
@@ -513,6 +517,13 @@ public class Game {
 					
 					//update pot
 					server.localSend(new Message(MessageType.REFUND, "0"));
+					
+					//inform players of the end of the game
+					for (int i = 0; i < mNumberOfPlayer; ++i) {
+						server.sendMessage(mIdsOrder.get(i),
+								new Message(Message.MessageType.END,
+										"Game ended"));
+					}
 					
 					mGameEnded  = true;
 					

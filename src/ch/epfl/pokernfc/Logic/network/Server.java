@@ -6,8 +6,10 @@ import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -297,6 +299,14 @@ public class Server extends NetworkComponent {
 		mSockets.clear();
 	}
 
+	/**
+	 * Return the list of connected ids.
+	 * @return
+	 */
+	public List<Integer> getConnectedIds() {
+		return new ArrayList<Integer>(mSockets.keySet());
+	}
+	
 	/**
 	 * Locally send the message to himself.
 	 * @param message

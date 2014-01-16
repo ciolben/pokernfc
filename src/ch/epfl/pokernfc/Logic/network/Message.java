@@ -10,6 +10,7 @@ public class Message{
 	    UNKNOWN, 	//unknown message			<-->
 	    INIT,		//initial session			<-->
 	    ERROR,		//error message				<-->
+	    INFO,		//info message				<-->
 	    CARD1,		//send card1  				-->
 	    CARD2,		//send card2  				-->
 	    BID,		//send a bid				<--
@@ -17,6 +18,7 @@ public class Message{
 	    ASKBLIND,	//ask for small/big blind	-->
 	    ASKBID,		//ask player action			-->
 	    REFUND,		//send money back			-->
+	    END,		//signal end of the game	-->
 	    ACK			//Acknowledgment			-->
 	}
 	private static final String SPLITTER = "@";
