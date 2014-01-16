@@ -585,25 +585,33 @@ public class Game {
 			@Override
 			public void handleMessage(Message message) {
 
+				int src = message.getSource();
+				
 				//check if start game should be called first
 				if (mGameEnded) {
 					System.out.println("Call start game first");
 					PokerState.getGameServer().sendMessage(getCurrentPlayerID(),
 							new Message(Message.MessageType.ERROR, "Reset Pot first"));
+					if (message.getType() == Message.MessageType.BID) {
+						PokerState.getGameServer().sendMessage(src,
+								new Message(Message.MessageType.REFUND, message.getLoad()));
+					}
 					return;
 				}
 				
 				//check if current player has the right to play
-				int src = message.getSource();
 				if (!checkTurn(src)) {
 					if (src == -1) {
 						//message not for the Game engine
 						return;
 					}
-					//TODO : refund maybe
 					System.out.println("Wrong player turn : " + src + ", expected : " + getCurrentPlayerID());
 					PokerState.getGameServer().sendMessage(src,
 							new Message(Message.MessageType.ERROR, "Not your turn."));
+					if (message.getType() == Message.MessageType.BID) {
+						PokerState.getGameServer().sendMessage(src,
+								new Message(Message.MessageType.REFUND, message.getLoad()));
+					}
 					return;
 				}
 				
