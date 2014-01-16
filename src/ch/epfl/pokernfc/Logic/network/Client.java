@@ -71,7 +71,7 @@ public class Client extends NetworkComponent {
 //					Log.d("ClientActivity", "C: Sent.");
 				} catch (Exception e) {
 //					Log.e("ClientActivity", "S: Error", e);
-					//e.printStackTrace();
+					e.printStackTrace();
 					break;
 				}
 			}
@@ -79,7 +79,7 @@ public class Client extends NetworkComponent {
 			//Log.d("ClientActivity", "C: Closed.");
 		} catch (Exception e) {
 			//Log.e("ClientActivity", "C: Error", e);
-			//e.printStackTrace();
+			e.printStackTrace();
 			mConnected = false;
 		} finally {
 			System.out.println("Disconnected.");
