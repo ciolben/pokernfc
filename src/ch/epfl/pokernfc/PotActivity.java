@@ -264,7 +264,7 @@ initCard();
 						break;
 					case BID:
 						
-						float amount = Float.parseFloat(message.getLoad());
+						final float amount = Float.parseFloat(message.getLoad());
 						
 						//update cash
 						//pot.addCash(amount); done Game side
@@ -275,7 +275,12 @@ initCard();
 							@Override
 							public void run() {
 								
-								((TextView) findViewById(R.id.tvValue)).setText(String.valueOf(pot.getCash()));
+								TextView tv = (TextView) findViewById(R.id.tvValue);
+								
+								//avoid asynch problems
+								float tot = amount + Float.parseFloat(tv.getText().toString());
+								
+								tv.setText(String.valueOf(tot));
 						
 							}
 						});

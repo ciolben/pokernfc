@@ -84,10 +84,20 @@ public class Client extends NetworkComponent {
 			e.printStackTrace();
 			mConnected = false;
 		} finally {
+			localSend(new Message(Message.MessageType.ERROR, "Disconnected"));
 			System.out.println("Disconnected.");
 		}
 	}
 	
+	/**
+	 * Send locally a message to the client.
+	 * @param message
+	 */
+	public void localSend(Message message) {
+		for (NetworkMessageHandler handler : getMessageHandlers()) {
+			handler.handleMessage(message);
+		}
+	}
 	
 	public boolean sendMessage(Object message){
 		if(outPrinter != null){
