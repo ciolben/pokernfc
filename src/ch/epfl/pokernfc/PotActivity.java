@@ -294,8 +294,6 @@ initCard();
 						     public void run() {
 								tempCard.setImageDrawable(getResources().getDrawable(getResources().
 								getIdentifier("drawable/card_"+message.getLoad(), null,getPackageName())));
-		            			Toast.makeText(getApplicationContext(), tempCard.getLayoutParams().height +" "+ tempCard.getLayoutParams().width, Toast.LENGTH_LONG).show();
-								tempCard.getLayoutParams().height = LayoutParams.MATCH_PARENT;
 								tempCard.setVisibility(View.VISIBLE);
 								if(tempCard == card1) tempCard = card2;
 								else if(tempCard == card2) tempCard = card3;
