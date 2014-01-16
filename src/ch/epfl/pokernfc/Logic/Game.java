@@ -356,7 +356,14 @@ public class Game {
 					List<Card> playerHand = new ArrayList<Card>();
 					Card card1 = mDeck.getCards().remove(0);
 					playerHand.add(card1);
-					Player player = mPlayers.get(id);
+					//this part would be better as a hashmap
+					Player player = null;
+					for (int j = 0; j < mPlayers.size(); ++j) {
+						if (Integer.parseInt(mPlayers.get(j).getName()) == id) {
+							player = mPlayers.get(j);
+							break;
+						}
+					}
 					player.setHand(playerHand);
 					PokerState.getGameServer().sendMessage(id,
 							new Message(MessageType.CARD1, card1.getValue().getSuitValue()
@@ -365,7 +372,13 @@ public class Game {
 				//second round
 				for (int i = 0; i < mNumberOfPlayer; ++i) {
 					int id = mIdsOrder.get((i + mLastDealer + 1) % mNumberOfPlayer);
-					Player player = mPlayers.get(id);
+					Player player = null;
+					for (int j = 0; j < mPlayers.size(); ++j) {
+						if (Integer.parseInt(mPlayers.get(j).getName()) == id) {
+							player = mPlayers.get(j);
+							break;
+						}
+					}
 					List<Card> playerHand = player.getHand();
 					Card card2 = mDeck.getCards().remove(0);
 					playerHand.add(card2);
