@@ -79,14 +79,12 @@ public class Server extends NetworkComponent {
 			while (!mClose.get()) {
 				try {
 					//some sleep is always good
-					System.out.println("blup");
 					sleep(100);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				for (Connection connection : mSockets.values()) {
-					System.out.println("conn "+connection.getPlayerID());
 					synchronized (connection) {
 						if (!connection.isAlive()){
 							//remove from list
