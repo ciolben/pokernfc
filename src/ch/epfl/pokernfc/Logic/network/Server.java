@@ -89,6 +89,11 @@ public class Server extends NetworkComponent {
 						if (!connection.isAlive()){
 							//remove from list
 							mSockets.remove(connection.getPlayerID());
+							Message m = new Message(MessageType.FOLD, "byebye!!");
+							m.setSource(connection.getPlayerID());
+							localSend(m);
+							System.out.println("folddddd");
+							connection.close();
 							continue;
 						}
 						String line = null;
@@ -102,16 +107,17 @@ public class Server extends NetworkComponent {
 						while (connection.messageAvailable() && (line = connection.readLine()) != null) {
 //							Log.d("ServerActivity", line);//////////
 
-							// DO WHATEVER YOU WANT TO THE FRONT END
-							// THIS IS WHERE YOU CAN BE CREATIVE
-							System.out.println("server received: "+ line);
-							if (line != null) {
-								//give content to Pot
-								for (NetworkMessageHandler handler : getMessageHandlers()) {
-									Message message = new Message(line);
-									message.setSource(connection.getPlayerID());
-									handler.handleMessage(message);
+
+								System.out.println("server received: "+ line);
+								Message message = new Message(line);
+							if (message.getType() != MessageType.PING) {
+								
+								message.setSource(connection.getPlayerID());
+									for (NetworkMessageHandler handler : getMessageHandlers()) {
+										handler.handleMessage(message);
 								}
+							} else {
+								System.out.println("PONG");
 							}
 
 //							mHandler.post(new Runnable() {
@@ -122,6 +128,21 @@ public class Server extends NetworkComponent {
 //								}
 //							});
 							connection.updateLastSeen();
+						}
+						long time = System.currentTimeMillis();
+						if((time - connection.getLastSeen()) > connection.TIMEOUT){
+							if ((time - connection.getLastSeen()) > connection.TIMEOUT * 4){
+								mSockets.remove(connection.getPlayerID());
+								Message m = new Message(MessageType.FOLD, "byebye!!");
+								System.out.println("foldddddd pinggg no respondinggg");
+								m.setSource(connection.getPlayerID());
+								localSend(m);
+								connection.close();
+							} else if (time - connection.getLastPing() > connection.TIMEOUT /2) {
+								System.out.println("pinggg ping "+mSockets.size());
+								sendMessage(connection.getPlayerID(), new Message(MessageType.PING, "are you still alive??"));
+								connection.updatePing();
+							}
 						}
 					}
 				}
@@ -253,9 +274,6 @@ public class Server extends NetworkComponent {
 			//write the message:
 			System.out.println("MESSAGE SENT TO " + id + " | content : " + outgoingMsg);
 			writeOK = connection.sendMessage(outgoingMsg);
-			if(writeOK) {
-					connection.updateLastSeen();
-			}
 			return writeOK;
 
 		}

@@ -19,7 +19,9 @@ public class Message{
 	    ASKBID,		//ask player action			-->
 	    REFUND,		//send money back			-->
 	    END,		//signal end of the game	-->
-	    ACK			//Acknowledgment			-->
+	    ACK,			//Acknowledgment			-->
+	    PING,     //ping to check connection status			<-->
+	    
 	}
 	private static final String SPLITTER = "@";
 	

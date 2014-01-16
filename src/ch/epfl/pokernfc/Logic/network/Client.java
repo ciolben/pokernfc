@@ -61,9 +61,14 @@ public class Client extends NetworkComponent {
 					String content = readLine();
 					System.out.println("client "+myID+" received: "+ content);
 					if (content != null) {
-						//give content to player
-						for (NetworkMessageHandler handler : getMessageHandlers()) {
-							handler.handleMessage(new Message(content));
+						Message message = new Message(content);
+						if (message.getType() == MessageType.PING){
+							sendMessage(new Message(MessageType.PING, "PONG wella!!"));
+						} else {
+							//give content to player
+							for (NetworkMessageHandler handler : getMessageHandlers()) {
+								handler.handleMessage(message);
+							}
 						}
 					} else {
 						break;

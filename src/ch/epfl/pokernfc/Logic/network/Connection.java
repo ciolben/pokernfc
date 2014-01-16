@@ -17,6 +17,8 @@ public class Connection {
 	private int mPlayerID;
 	private BufferedReader inBuffer;
 	private PrintWriter outPrinter;
+	public static final long TIMEOUT = 5000;
+	private long pingtime = 0;
 
 	public Connection(Socket socket){
 		mSocket = socket;
@@ -90,6 +92,12 @@ public class Connection {
 
 	public synchronized void updateLastSeen() {
 		this.mLastSeen = System.currentTimeMillis();
+	}
+	public synchronized void updatePing() {
+		this.pingtime = System.currentTimeMillis();
+	}
+	public long getLastPing() {
+		return pingtime;
 	}
 
 
