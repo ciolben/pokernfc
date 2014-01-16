@@ -1,6 +1,10 @@
 package ch.epfl.pokernfc;
 
+import java.util.List;
+
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcEvent;
@@ -28,6 +32,8 @@ public class PotActivity extends PokerActivity {
 	private ImageView card3;
 	private ImageView card4;
 	private ImageView card5;
+	private ImageView tempCard;
+
 
 	
 	@Override
@@ -35,16 +41,7 @@ public class PotActivity extends PokerActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pot);
 		
-//		card1 = (ImageView) findViewById(R.id.potCard1);
-//		card1.setVisibility(View.INVISIBLE);
-//		card2 = (ImageView) findViewById(R.id.potCard2);
-//		card2.setVisibility(View.INVISIBLE);
-//		card3 = (ImageView) findViewById(R.id.potCard3);
-//		card3.setVisibility(View.INVISIBLE);
-//		card4 = (ImageView) findViewById(R.id.potCard4);
-//		card4.setVisibility(View.INVISIBLE);
-//		card5 = (ImageView) findViewById(R.id.potCard5);
-//		card5.setVisibility(View.INVISIBLE);
+initCard();
 		
 		// Show the Up button in the action bar.
 		setupActionBar();
@@ -78,6 +75,8 @@ public class PotActivity extends PokerActivity {
 			System.out.println("FATAL ERROR, next player id = 0");
 			id = 0;
 		}
+		
+		//listen to new client
 		PokerState.getGameServer().listenToNewPlayer(id);
 		
 		String ip = PokerState.getGameServer().getServerIP();
@@ -86,6 +85,28 @@ public class PotActivity extends PokerActivity {
 		mDataToSendBuffer = MessageUtils.createNFCWelcome(ip, port, id);
 		
 		}
+	}
+	
+	public void onNonNFCClient() {
+		Object[] parsed = MessageUtils.parseNFCWelcomeMessage(mDataToSendBuffer);
+		int wantedID = (Integer) parsed[2];
+		AlertDialog dialog = new AlertDialog.Builder(this).create();
+	    dialog.setTitle("Connect to server");
+	    dialog.setMessage("Use this id : " + wantedID);
+	    dialog.setCancelable(false);
+	    dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int buttonId) {
+	        	mDataToSendBuffer = "";
+	    	    prepareNextWelcomeMessage();
+	        }
+	    });
+	    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int buttonId) {
+	        
+	        }
+	    });	    dialog.setIcon(android.R.drawable.ic_dialog_alert);
+	    dialog.show();
+	    
 	}
 	
 	/**
@@ -177,6 +198,18 @@ public class PotActivity extends PokerActivity {
 	
 	public void onStartGame(View view) {
 		Game game = PokerObjects.getGame();
+		
+		//remove unconnected clients
+		List<Integer> connected = PokerState.getGameServer().getConnectedIds();
+		List<Integer> registered = game.getRegisteredIds();
+		
+		for (Integer id : registered) {
+			if (!connected.contains(id)) {
+				game.revokePlayer(id);
+				System.out.println("PotActivity : removed unconnected player " + id);
+			}
+		}
+		
 		game.startGame();
 		log("Game started.");
 	}
@@ -194,7 +227,7 @@ public class PotActivity extends PokerActivity {
 				 * @param message
 				 */
 				@Override
-				public void handleMessage(Message message) {
+				public void handleMessage(final Message message) {
 					
 					final Pot pot = PokerObjects.getPot();
 					
@@ -224,8 +257,22 @@ public class PotActivity extends PokerActivity {
 					//next card
 					//0 : erase, others, add new card	
 					case CARD1:
-						String card = message.getLoad();
-						//TODO 
+						runOnUiThread(new Runnable() {
+						     @Override
+						     public void run() {
+								tempCard.setImageDrawable(getResources().getDrawable(getResources().
+								getIdentifier("drawable/card_"+message.getLoad(), null,getPackageName())));
+								tempCard.setVisibility(View.VISIBLE);
+								if(tempCard == card1) tempCard = card2;
+								if(tempCard == card2) tempCard = card3;
+								if(tempCard == card3) tempCard = card4;
+								if(tempCard == card4) tempCard = card5;
+						     }
+						});
+						
+					case END:
+						initCard();
+						
 					//remove cash from Pot
 					case REFUND:
 						updateUiTextView(R.id.tvValue, String.valueOf(pot.getCash()));
@@ -237,5 +284,30 @@ public class PotActivity extends PokerActivity {
 			};
 		}
 		PokerState.getGameServer().registerNetworkMessageHandler(mMsgHandler);
+	}
+	
+	private void initCard(){
+		runOnUiThread(new Runnable() {
+		     @Override
+		     public void run() {
+		    	 card1.setImageDrawable(getResources().getDrawable(R.drawable.back_card));
+		 		card1 = (ImageView) findViewById(R.id.potCard1);
+				card1.setVisibility(View.INVISIBLE);
+				card2 = (ImageView) findViewById(R.id.potCard2);
+		    	 card2.setImageDrawable(getResources().getDrawable(R.drawable.back_card));
+				card2.setVisibility(View.INVISIBLE);
+				card3 = (ImageView) findViewById(R.id.potCard3);
+		    	 card3.setImageDrawable(getResources().getDrawable(R.drawable.back_card));
+				card3.setVisibility(View.INVISIBLE);
+				card4 = (ImageView) findViewById(R.id.potCard4);
+		    	 card4.setImageDrawable(getResources().getDrawable(R.drawable.back_card));
+				card4.setVisibility(View.INVISIBLE);
+				card5 = (ImageView) findViewById(R.id.potCard5);
+		    	 card5.setImageDrawable(getResources().getDrawable(R.drawable.back_card));
+				card5.setVisibility(View.INVISIBLE);
+				
+				tempCard = card1;
+		     }
+		});
 	}
 }

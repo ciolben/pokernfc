@@ -97,10 +97,6 @@ public class PlayerActivity extends PokerActivity {
 					registerMessageHandler();
 		            
 		        }
-		    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int whichButton) {
-		            // Do nothing.
-		        }
 		    }).show();
 
 			
@@ -463,6 +459,8 @@ public class PlayerActivity extends PokerActivity {
 					case CARD2:
 						setCard(message);
 						break;
+					case END:
+						
 					case ERROR:
 						log(message.getLoad());
 						break;

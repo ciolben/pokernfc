@@ -132,6 +132,14 @@
         android:onClick="onStartGame"     
         
         android:text="Start Game" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onNonNFCClient"
+        android:text="Add Player" />
+
         </LinearLayout>
     
 
