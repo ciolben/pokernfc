@@ -290,7 +290,7 @@ public class Game {
 	
 	private void preflop(float value) {
 		Server server = PokerState.getGameServer();
-		
+		System.out.println("PREFLOP");
 		switch (mCurrentBidType) {
 		case SMALL:
 			//check if the current bid = small blind
@@ -421,7 +421,7 @@ public class Game {
 	private void bidtour(float value) {
 		Server server = PokerState.getGameServer();
 		Card card;
-		
+		System.out.println("BIDTOUR");
 		if (mCurrentBidType != BIDTYPE.BID) {
 			System.err.println("ERROR bidtour (BIDTYPE != BID)");
 			return;
@@ -591,6 +591,8 @@ public class Game {
 							new Message(Message.MessageType.ERROR, "Not your turn."));
 					return;
 				}
+				
+				System.out.println("GAME : " + message);
 				
 				switch (message.getType()) {
 				case UNKNOWN:

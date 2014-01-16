@@ -436,6 +436,13 @@ public class PlayerActivity extends PokerActivity {
 						break;
 					case ACK:
 						log("Connected to server.");
+						break;
+					case ASKBLIND:
+						log("Blind : " + message.getLoad());
+						break;
+					case ASKBID:
+						log("BID at least : " + message.getLoad());
+						break;
 					case REFUND:
 						float amount = Float.parseFloat(message.getLoad());
 						
@@ -457,7 +464,8 @@ public class PlayerActivity extends PokerActivity {
 						setCard(message);
 						break;
 					case END:
-						
+						log(message.getLoad());
+						break;
 					case ERROR:
 						log(message.getLoad());
 						break;
