@@ -197,11 +197,13 @@ public class Game {
 		//Integer are compared by the equals method, thus by their value, not by their address.
 		boolean ok = mIds.remove(Integer.valueOf(id));
 		if (ok) {
-//			mIdsOrder.remove(Integer.valueOf(id));
-//			mPlayers.remove(Integer.valueOf(id));
-			System.out.println("Id  removed : "+ mIdsOrder.remove(Integer.valueOf(id)));
-			System.out.println("Player removed : "+ mPlayers.remove(Integer.valueOf(id)));
-			System.out.println("Player size : " + mPlayers.size());
+			mIdsOrder.remove(Integer.valueOf(id));
+			for (int i = 0; i < mPlayers.size(); ++i) {
+				if (Integer.parseInt(mPlayers.get(i).getName()) == id) {
+					mPlayers.remove(i);
+					break;
+				}
+			}
 			mLastFreeId = id;
 			mIterator = 0; //reset the iterator
 			--mNumberOfPlayer;
@@ -600,7 +602,7 @@ public class Game {
 					}
 					//TODO : refund maybe
 					System.out.println("Wrong player turn : " + src + ", expected : " + getCurrentPlayerID());
-					PokerState.getGameServer().sendMessage(getCurrentPlayerID(),
+					PokerState.getGameServer().sendMessage(src,
 							new Message(Message.MessageType.ERROR, "Not your turn."));
 					return;
 				}

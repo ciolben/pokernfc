@@ -311,11 +311,11 @@ initCard();
 	}
 	
 	private void initCard(){
-		card1.setVisibility(View.INVISIBLE);
-		card2.setVisibility(View.INVISIBLE);
-		card3.setVisibility(View.INVISIBLE);
-		card4.setVisibility(View.INVISIBLE);
-		card5.setVisibility(View.INVISIBLE);
+//		card1.setVisibility(View.INVISIBLE);
+//		card2.setVisibility(View.INVISIBLE);
+//		card3.setVisibility(View.INVISIBLE);
+//		card4.setVisibility(View.INVISIBLE);
+//		card5.setVisibility(View.INVISIBLE);
 		
 		card1.setImageDrawable(hiddenCard);
 		card2.setImageDrawable(hiddenCard);

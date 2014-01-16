@@ -337,6 +337,8 @@ public class PlayerActivity extends PokerActivity {
 		card2.setVisibility(View.VISIBLE);
 		
 		PokerState.getGameClient().sendMessage(new Message(Message.MessageType.FOLD, "0"));
+		
+		log("I'm forfeited.");
 //		System.out.println("Player : PAY CASH");
 //		card1.setVisibility(View.VISIBLE);
 //		card2.setVisibility(View.VISIBLE);
@@ -350,10 +352,11 @@ public class PlayerActivity extends PokerActivity {
 	}
 	public void call(View view) {
 		
+		float amount = PokerObjects.getPlayer().getFolowAmount();
 		PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID,
-				String.valueOf(PokerObjects.getPlayer().getFolowAmount())));
+				String.valueOf(amount)));
 		
-		
+		log("I'v bid " + amount + ".-");
 //		System.out.println("Player : PAY CASH");
 //		card1.setVisibility(View.VISIBLE);
 //		card2.setVisibility(View.VISIBLE);
