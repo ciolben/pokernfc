@@ -344,49 +344,6 @@ public class Game {
 			}
 			break;
 		case BID:
-			//if first beginning of second tour and small blind -> must bid mcurrentbid - smallblind
-			//lastDealer + 1 = small blind position
-//			if (!mFirstRoundEnded && (getCurrentPlayerID() == mLastDealer + 1)) {
-//				mFirstRoundEnded = true;
-//				
-//				if (value >= mCurrentBid - mSmallBlind) {
-//					if (value > mCurrentBid - mSmallBlind) {
-//						mConsecutiveFollow = 0;
-//					} else { //=
-//						++mConsecutiveFollow;
-//					}
-//
-//					mCurrentBid = value + mSmallBlind; //or getCurrentPlayerBid(), we add the rest
-//					PokerObjects.getPot().addCash(value);
-//
-//					//determine if we need to continue the bidtour
-//					if (mConsecutiveFollow == mNumberOfPlayer - mForfeited.size()
-//							|| mForfeited.size() == mNumberOfPlayer - 1) { //one player left
-//						mConsecutiveFollow = 0;
-//						mCurrentTour = TOUR.FLOP;
-//						System.out.println("Start of FLOP tour");
-//						System.out.println("Link new 3 cards view HERE");
-//					} else {
-//						//save bid for player
-//						addToCurrentPlayerBid(value);
-//						//move to next player
-//						getNextPlayerID();
-//						bidtour(0); //we g to bid tour now
-//					}
-//				} else if (value != 0) {
-//					//if player has not bid enough, refund it and ask again
-//					server.sendMessage(getCurrentPlayerID(),
-//							new Message(Message.MessageType.REFUND, String.valueOf(value)));
-//					server.sendMessage(getCurrentPlayerID(),
-//							new Message(Message.MessageType.ASKBID, String.valueOf(mCurrentBid - mSmallBlind)));
-//				} else {
-//					//ask for bid
-//					server.sendMessage(getCurrentPlayerID(),
-//							new Message(Message.MessageType.ASKBID, String.valueOf(mCurrentBid - mSmallBlind)));
-//				}
-//			} else {
-//				bidtour(value);
-//			}
 			
 			//need to send the cards
 			//at each round, one card is given to the player, starting from the small blind
@@ -513,7 +470,7 @@ public class Game {
 					utils.setPlayers(mPlayers);
 					utils.setCommunityCards(mCommunityCards);
 					
-					//TODO : enhance this method to find possible draw(s)
+					//enhance this method to find possible draw(s)
 					Player winner = utils.determineWinner();
 					
 					//will give him the Pot

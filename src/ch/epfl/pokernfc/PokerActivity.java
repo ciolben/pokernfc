@@ -28,7 +28,6 @@ public abstract class PokerActivity extends BeamActivity {
                 IBinder service) {
             // We've bound to PokerNFCBinder, cast the IBinder and get PokerNFCBinder instance
             mBinder = (PokerNFCBinder) service;
-//            mService = binder.getService();
             mBound = true;
             Log.i("Poker", "Activity : service Connected.");
         }
@@ -89,19 +88,4 @@ public abstract class PokerActivity extends BeamActivity {
 			}
 		});
     }
-    
-//    protected void onPause() {
-//    	super.onPause();
-//    	NFCUtils.callOnPause(this);
-//    }
-//    
-//    protected void onResume() {
-//    	super.onResume();
-//    	NFCUtils.callOnResume(this);
-//    }
-//    
-//    protected void onNewIntent(Intent intent) {
-//    	super.onNewIntent(intent);
-//    	NFCUtils.callOnNewIntent(true, intent, this, "TETEEESETSTSETSTTTT");
-//    }
 }

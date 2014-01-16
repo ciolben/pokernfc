@@ -98,8 +98,6 @@ public class PlayerActivity extends PokerActivity {
 		
 		
 		
-		
-		//
 		LinearLayout card = (LinearLayout) findViewById(R.id.player_card_layout);
 		card.setOnTouchListener(new OnTouchListener(){
 
@@ -138,16 +136,14 @@ public class PlayerActivity extends PokerActivity {
 
 		System.out.println("PlayerActivity : onCreate");
 
-		PokerObjects.getPlayer().addCash(1000.f);//TODO attention oncreate called also when screen turn!!
+		PokerObjects.getPlayer().addCash(1000.f);
 		
     	/*
     	 * Manage state of the application.
     	 * If we were in the Player state to Pot state, or the opposite.
     	 */
     	
-    	if (!PokerState.lastActivityWasPlayer()) {
-    		//TODO
-    	}
+
 		PokerState.currentActivityIsPlayer(true);
 		
 		// Register the handler for the NFC message received
@@ -169,12 +165,6 @@ public class PlayerActivity extends PokerActivity {
 							+ "[1] \t" + port
 							+ "[2] \t" + id);
 					
-					//Start client
-					Client client = PokerState.getGameClient();
-					if (client != null) {
-						//TODO : some cleaning stuff
-						//client.stop();
-					}
 					PokerState.createGameClient(id, ip, port);
 					
 					registerMessageHandler(); //for receiving news from server
@@ -182,18 +172,14 @@ public class PlayerActivity extends PokerActivity {
 				} else { System.out.println("--> unknown message"); }
 			}});
 		
-		//Binding
-//		bind("Player");
 	}
 	
 	@Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);//must store the new intent unless getIntent() will return the old one
-        //TODO
         
         System.out.println("PlayerActivity : onNewIntent");
-//        processIntent(intent); not needed because of super.onNewIntent before
     }
 
 	/**
@@ -253,7 +239,6 @@ public class PlayerActivity extends PokerActivity {
 		System.out.println("Player : BID");
 		final VirtualPlayer player = PokerObjects.getPlayer();
 		
-		//TODO what if minbid > maxbid???
 		final float minBid = PokerObjects.getPlayer().getFolowAmount(); //should be = to call
 		final float maxBid = (int) PokerObjects.getPlayer().getCash();// all in? equal to pot? depending on rule!
 		
@@ -296,7 +281,6 @@ public class PlayerActivity extends PokerActivity {
 	    LayoutInflater inflater = (LayoutInflater)
 			    getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			    bidPickerdialog = inflater.inflate(R.layout.number_picker_dialog_layout, null);
-			   //  new TimePickerDialog(this, null, 0, 0, true).show();
 			    new AlertDialog.Builder(this)
 			        .setTitle("Place Bid:")
 			        .setView(bidPickerdialog)
@@ -344,16 +328,6 @@ public class PlayerActivity extends PokerActivity {
 		PokerState.getGameClient().sendMessage(new Message(Message.MessageType.FOLD, "0"));
 		
 		log("I'm forfeited.");
-//		System.out.println("Player : PAY CASH");
-//		card1.setVisibility(View.VISIBLE);
-//		card2.setVisibility(View.VISIBLE);
-//		//Credit the Pot by 10 chf
-//		if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(10)))) {
-//			PokerObjects.getPlayer().removeCash(10.f);
-//			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
-//		} else {
-//			log("Server not reachable.");
-//		}
 	}
 	public void call(View view) {
 		
@@ -365,16 +339,6 @@ public class PlayerActivity extends PokerActivity {
 		
 		PokerObjects.getPlayer().removeCash(amount);
 		((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
-//		System.out.println("Player : PAY CASH");
-//		card1.setVisibility(View.VISIBLE);
-//		card2.setVisibility(View.VISIBLE);
-//		//Credit the Pot by 10 chf
-//		if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(10)))) {
-//			PokerObjects.getPlayer().removeCash(10.f);
-//			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
-//		} else {
-//			log("Server not reachable.");
-//		}
 	}
 	
 	

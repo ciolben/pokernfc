@@ -20,13 +20,6 @@ public class ActivityDispatcher extends Activity {
 		Context con = getApplicationContext();
 		Intent intent = getIntent();
 		
-//		Intent intentForService = NFCUtils.reforgeIntentForService(getIntent(), con, PokerNFCService.class);
-//		System.out.println("Activity To Service : onNewIntent 1");
-//		if (intentForService == null) { return; }
-//		
-//		con.startService(intentForService); //doesn't matter if called multiple times
-//		System.out.println("Activity To Service : onNewIntent 2");
-		
 		System.out.println("Activity Dispatcher : onCreate");
 		
 		//dispatch intent to the right activity

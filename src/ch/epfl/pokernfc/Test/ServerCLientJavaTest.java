@@ -1,11 +1,14 @@
-package ch.epfl.pokernfc.Logic.network;
+package ch.epfl.pokernfc.Test;
 
 import java.util.Scanner;
 
+import ch.epfl.pokernfc.Logic.network.Client;
+import ch.epfl.pokernfc.Logic.network.Message;
+import ch.epfl.pokernfc.Logic.network.Server;
 import ch.epfl.pokernfc.Logic.network.Message.MessageType;
 
 
-public class javaTest {
+public class ServerCLientJavaTest {
  public static void main(String[] args) {
 	Server s = new Server();
 	

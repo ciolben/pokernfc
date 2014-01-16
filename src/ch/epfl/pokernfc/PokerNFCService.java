@@ -1,7 +1,6 @@
 package ch.epfl.pokernfc;
 
 import ch.epfl.pokernfc.Utils.AsynchHandler;
-import ch.epfl.pokernfc.Utils.NFCUtils;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
@@ -56,12 +55,6 @@ public class PokerNFCService extends IntentService implements AsynchHandler<Stri
 			System.out.println("-> null intent.");
 			return;
 		}
-		//check if the intent is for the Player or the Pot, and redirect intent
-		Intent nfcIntent = new Intent(intent);
-		
-		//asynchronous decoding
-		//NFCUtils.getNDEFMessage(nfcIntent, this);
-		
 	}
 
 	@Override

@@ -16,16 +16,13 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import ch.epfl.pokernfc.Logic.Game;
 import ch.epfl.pokernfc.Logic.PokerObjects;
 import ch.epfl.pokernfc.Logic.Pot;
 import ch.epfl.pokernfc.Logic.network.Message;
 import ch.epfl.pokernfc.Logic.network.NetworkMessageHandler;
-import ch.epfl.pokernfc.Logic.network.Server;
 import ch.epfl.pokernfc.Utils.MessageUtils;
 
 public class PotActivity extends PokerActivity {
@@ -68,16 +65,11 @@ initCard();
     	 * If we were in the Player state to Pot state, or the opposite.
     	 */
     	
-    	if (PokerState.lastActivityWasPlayer()) {
-    		//TODO
-    	}
 		PokerState.currentActivityIsPlayer(false);
 		
 		//init first message to send
 		prepareNextWelcomeMessage();
 		
-		//binding
-//		bind("Pot");
 	}
 	
 	private void prepareNextWelcomeMessage() {
@@ -144,7 +136,6 @@ initCard();
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);//must store the new intent unless getIntent() will return the old one
-        //TODO
         
         System.out.println("PotActivity : onNewIntent");
     }
@@ -187,7 +178,6 @@ initCard();
 	public void onNFCIntent(String nfcContent) {
 		System.out.println("POT NFC INTENT");
 		
-//		((TextView) findViewById(R.id.extraLabel)).setText(nfcContent);
 	}
 
 	/**
@@ -265,10 +255,7 @@ initCard();
 					case BID:
 						
 						final float amount = Float.parseFloat(message.getLoad());
-						
-						//update cash
-						//pot.addCash(amount); done Game side
-						
+												
 						//update view
 						runOnUiThread(new Runnable() {
 							
@@ -319,11 +306,11 @@ initCard();
 	}
 	
 	private void initCard(){
-//		card1.setVisibility(View.INVISIBLE);
-//		card2.setVisibility(View.INVISIBLE);
-//		card3.setVisibility(View.INVISIBLE);
-//		card4.setVisibility(View.INVISIBLE);
-//		card5.setVisibility(View.INVISIBLE);
+		card1.setVisibility(View.INVISIBLE);
+		card2.setVisibility(View.INVISIBLE);
+		card3.setVisibility(View.INVISIBLE);
+		card4.setVisibility(View.INVISIBLE);
+		card5.setVisibility(View.INVISIBLE);
 		
 		card1.setImageDrawable(hiddenCard);
 		card2.setImageDrawable(hiddenCard);

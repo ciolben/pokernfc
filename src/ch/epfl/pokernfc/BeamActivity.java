@@ -40,7 +40,6 @@ OnNdefPushCompleteCallback {
 		
 		System.out.println("BeamActivtiy : OnCreate");
 
-//		mEditText = (EditText) findViewById(R.id.beam_edit_text);
 
 		// Check for available NFC Adapter
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -81,7 +80,6 @@ OnNdefPushCompleteCallback {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case MESSAGE_SENT:
-//				Toast.makeText(getApplicationContext(), "Message sent!", Toast.LENGTH_LONG).show();
 				
 				System.out.println("BeamActivity : Message sent, content = " + mDataToSendBuffer);
 				// Empty the buffer
@@ -141,7 +139,6 @@ OnNdefPushCompleteCallback {
 		String payload = new String(msg.getRecords()[0].getPayload());
 		System.out.println("BeamActivity : payload : " + payload);
 		
-//		Toast.makeText(getApplicationContext(), "Message received over beam: " + payload, Toast.LENGTH_LONG).show();
 		for (NFCMessageReceivedHandler handler : mNFCMsgHandlers) {
 			handler.handleMessage(payload);
 		}

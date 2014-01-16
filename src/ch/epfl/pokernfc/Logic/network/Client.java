@@ -11,21 +11,17 @@ import java.net.Socket;
 
 import ch.epfl.pokernfc.Logic.network.Message.MessageType;
 
-//import android.os.Handler;
-//import android.util.Log;
 
 public class Client extends NetworkComponent {
 	private static String mServerIP;
 	private static int mServerPort = 8765;
 	private boolean mConnected;
-	//private Handler handler;
 	private BufferedReader inBuffer;
 	private PrintWriter outPrinter;
 	private Socket mSocket;
 	private int myID;
 
-	public Client(int id, String serverIP, int serverPort/*, Handler handler*/){
-//		this.handler = handler;
+	public Client(int id, String serverIP, int serverPort){
 		mServerIP = serverIP;
 		myID = id;
 		mConnected = false;
@@ -53,11 +49,6 @@ public class Client extends NetworkComponent {
 			//wait for other messages from server
 			while (mConnected) {
 				try {
-//					Log.d("ClientActivity", "C: Sending command.");
-					
-					
-					// WHERE YOU ISSUE THE COMMANDS
-					//if(messageAvailable()){
 					String content = readLine();
 					System.out.println("client "+myID+" received: "+ content);
 					if (content != null) {
@@ -73,19 +64,14 @@ public class Client extends NetworkComponent {
 					} else {
 						break;
 					}
-					//}
-					
-//					Log.d("ClientActivity", "C: Sent.");
+
 				} catch (Exception e) {
-//					Log.e("ClientActivity", "S: Error", e);
 					e.printStackTrace();
 					break;
 				}
 			}
 			mSocket.close();
-			//Log.d("ClientActivity", "C: Closed.");
 		} catch (Exception e) {
-			//Log.e("ClientActivity", "C: Error", e);
 			e.printStackTrace();
 			mConnected = false;
 		} finally {
@@ -115,11 +101,8 @@ public class Client extends NetworkComponent {
 
 	public synchronized String readLine(){
 		try {
-			if(inBuffer != null){
-				
-				//TODO : if receive is null = end of stream -> close connection
-				
-			return inBuffer.readLine();
+			if(inBuffer != null){				
+				return inBuffer.readLine();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -134,7 +117,6 @@ public class Client extends NetworkComponent {
 			e.printStackTrace();
 		}
 		return false;
-
 
 	}
  }

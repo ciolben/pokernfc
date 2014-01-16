@@ -19,12 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.http.conn.util.InetAddressUtils;
 
 import ch.epfl.pokernfc.Logic.network.Message.MessageType;
-import ch.epfl.pokernfc.Logic.texasholdem.Card;
-import ch.epfl.pokernfc.Logic.texasholdem.Deck;
 
-//import android.os.Handler;
-//import android.util.Log;
-//import android.widget.Toast;
 
 
 public class Server extends NetworkComponent {
@@ -52,8 +47,7 @@ public class Server extends NetworkComponent {
 		return serverIP;
 	}
 
-	public Server(/*Handler handler*/){
-		//mHandler = handler;
+	public Server(){
 		
 		serverIP = getLocalIpAddress();
 		try {
@@ -62,26 +56,19 @@ public class Server extends NetworkComponent {
 			this.start();
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public void run() {
 		if (serverIP != null){
-//			writeToastMessage("Listening on IP: " + serverIP, Toast.LENGTH_SHORT);
 
-			//TODO test::
-//			Deck deck = new Deck();
-			
-			
 			//while not close  check all msocket from time to time... sync the socket
 			while (!mClose.get()) {
 				try {
 					//some sleep is always good
 					sleep(100);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				for (Connection connection : mSockets.values()) {
@@ -97,15 +84,8 @@ public class Server extends NetworkComponent {
 							continue;
 						}
 						String line = null;
-						//deck.shuffleDeck();
-//						Deck deck = new Deck(); 
-//						for (Card card : deck.getCards()) {
-//							sendMessage(connection.getPlayerID(),
-//									new Message(MessageType.CARD1, card.getValue().getSuitValue()+"_"+card.getSuit().getSuitValue()));
-//						}
 						
 						while (connection.messageAvailable() && (line = connection.readLine()) != null) {
-//							Log.d("ServerActivity", line);//////////
 
 
 								System.out.println("server received: "+ line);
@@ -116,17 +96,8 @@ public class Server extends NetworkComponent {
 									for (NetworkMessageHandler handler : getMessageHandlers()) {
 										handler.handleMessage(message);
 								}
-							} else {
-								System.out.println("PONG");
 							}
 
-//							mHandler.post(new Runnable() {
-//								@Override
-//								public void run() {
-//									// DO WHATEVER YOU WANT TO THE FRONT END
-//									// THIS IS WHERE YOU CAN BE CREATIVE
-//								}
-//							});
 							connection.updateLastSeen();
 						}
 						long time = System.currentTimeMillis();
@@ -134,12 +105,10 @@ public class Server extends NetworkComponent {
 							if ((time - connection.getLastSeen()) > connection.TIMEOUT * 4){
 								mSockets.remove(connection.getPlayerID());
 								Message m = new Message(MessageType.FOLD, "byebye!!");
-								System.out.println("foldddddd pinggg no respondinggg");
 								m.setSource(connection.getPlayerID());
 								localSend(m);
 								connection.close();
 							} else if (time - connection.getLastPing() > connection.TIMEOUT /2) {
-								System.out.println("pinggg ping "+mSockets.size());
 								sendMessage(connection.getPlayerID(), new Message(MessageType.PING, "are you still alive??"));
 								connection.updatePing();
 							}
@@ -148,7 +117,7 @@ public class Server extends NetworkComponent {
 				}
 			}
 		} else {
-//			writeToastMessage("Couldn't detect connection.", Toast.LENGTH_LONG);
+//			Couldn't detect connection
 		}
 	}
 
@@ -167,7 +136,6 @@ public class Server extends NetworkComponent {
 				}
 			}
 		} catch (SocketException ex) {
-//			Log.e("ServerActivity", ex.toString());
 			ex.printStackTrace();
 		}
 		return null;
@@ -225,7 +193,6 @@ public class Server extends NetworkComponent {
 								Connection connection = new Connection(client);
 								if(mWaitingPlayerConnection.contains(connection.getPlayerID())){
 									//connection successfully established with the client: store the socket
-//									mWaitingPlayerConnection.remove(connection.getPlayerID());
 									mSockets.put(connection.getPlayerID(), connection);
 									awaitingNewPlayers.decrementAndGet();
 								} else {
@@ -238,12 +205,11 @@ public class Server extends NetworkComponent {
 							if(lock.isHeldByCurrentThread()){
 								lock.unlock();
 							}
-//							writeToastMessage("Errror", Toast.LENGTH_LONG);
 							e.printStackTrace();
 						}
 						}
 						} else {
-//							writeToastMessage("Couldn't detect connection.", Toast.LENGTH_LONG);
+//							Couldn't detect connection
 
 						
 						}
@@ -279,22 +245,6 @@ public class Server extends NetworkComponent {
 		}
 	}
 
-//	public Connection receiveMessage(int id){
-//		Connection connection = mSockets.get(id);
-//		if (connection == null){
-//			return null;
-//		}
-//		synchronized (connection) {
-//
-//			if (!connection.isAlive()) {
-//				mSockets.remove(connection.getPlayerID());
-//				return null;
-//			} else {
-//				return connection;
-//			}
-//		}
-//	}
-
 	public void closeNewPlayer(){
 		mNewPlayerClose.set(true);
 		synchronized (awaitingNewPlayers) {
@@ -305,7 +255,6 @@ public class Server extends NetworkComponent {
 		}
 		listenNewPlayerThread =null;
 		
-		// maybe return player inside mWaitingPlayerConnection hence the one that didn't connect properly
 		mWaitingPlayerConnection.clear();
 		
 	}
@@ -342,17 +291,6 @@ public class Server extends NetworkComponent {
 		for (NetworkMessageHandler handler : getMessageHandlers()) {
 			handler.handleMessage(message);
 		}
-	}
-
-	private void writeToastMessage(final String message, final int length  ){
-//		if(mHandler != null){
-//		mHandler.post(new Runnable() {
-//			@Override
-//			public void run() {
-//				//Toast.makeText(getApplicationContext(), message , length ).show();
-//			}
-//		});
-//		}
 	}
 
 }

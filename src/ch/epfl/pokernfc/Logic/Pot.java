@@ -1,6 +1,5 @@
 package ch.epfl.pokernfc.Logic;
 
-import ch.epfl.pokernfc.Logic.network.Server;
 
 public class Pot {
 

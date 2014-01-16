@@ -31,7 +31,6 @@ public class Connection {
 			//read somehow the id and other informations we need
 			String line = readLine();
 			//mPlayerID = 4;
-//			Log.d("ServerActivity", line);//////////
 			Message m = new Message(line);
 			if(MessageType.INIT == m.getType()){
 				mPlayerID = Integer.valueOf(m.getLoad());
@@ -102,8 +101,6 @@ public class Connection {
 
 
 	public synchronized boolean isAlive() {
-		//TODO check somehow timeout
-
 		if (mSocket == null){
 			return false;
 		}else if (mSocket.isClosed() || !mSocket.isConnected()) {
@@ -123,7 +120,6 @@ public class Connection {
 		try {
 			inBuffer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
