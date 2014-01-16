@@ -64,7 +64,6 @@
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:scaleType="centerInside"
             android:src="@drawable/back_card" />
 
         <ImageView
