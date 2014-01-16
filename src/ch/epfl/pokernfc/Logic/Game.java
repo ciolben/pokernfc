@@ -390,7 +390,7 @@ public class Game {
 				mCardsDistributed = true;
 				//first round
 				for (int i = 0; i < mNumberOfPlayer; ++i) {
-					int id = mIdsOrder.get(i + mLastDealer + 1 % mNumberOfPlayer - 1);
+					int id = mIdsOrder.get((i + mLastDealer + 1) % mNumberOfPlayer);
 					List<Card> playerHand = new ArrayList<Card>();
 					Card card1 = mDeck.getCards().remove(0);
 					playerHand.add(card1);
@@ -402,7 +402,7 @@ public class Game {
 				}
 				//second round
 				for (int i = 0; i < mNumberOfPlayer; ++i) {
-					int id = mIdsOrder.get(i + mLastDealer % mNumberOfPlayer - 1);
+					int id = mIdsOrder.get((i + mLastDealer + 1) % mNumberOfPlayer);
 					Player player = mPlayers.get(i);
 					List<Card> playerHand = player.getHand();
 					Card card2 = mDeck.getCards().remove(0);

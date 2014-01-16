@@ -3,6 +3,7 @@ package ch.epfl.pokernfc.Logic;
 public class VirtualPlayer {
 	
 	private float m_cash = 0.f;
+	private float mFollowAmount = 0.f;
 	
 	protected VirtualPlayer() {
 		
@@ -30,5 +31,13 @@ public class VirtualPlayer {
 	
 	public void addCash(float amount) {
 		m_cash += amount;
+	}
+	
+	public void setFollowAmount(float amount) {
+		mFollowAmount = amount;
+	}
+	
+	public float getFolowAmount() {
+		return mFollowAmount;
 	}
 }

@@ -1,44 +1,34 @@
 package ch.epfl.pokernfc;
 
-import ch.epfl.pokernfc.Logic.VirtualPlayer;
-import ch.epfl.pokernfc.Logic.PokerObjects;
-import ch.epfl.pokernfc.Logic.network.Client;
-import ch.epfl.pokernfc.Logic.network.Message;
-import ch.epfl.pokernfc.Logic.network.NetworkMessageHandler;
-import ch.epfl.pokernfc.Logic.network.Message.MessageType;
-import ch.epfl.pokernfc.Utils.MessageUtils;
-import ch.epfl.pokernfc.Utils.NFCMessageReceivedHandler;
-import ch.epfl.pokernfc.Utils.NFCUtils;
-import android.opengl.Visibility;
-import android.os.Bundle;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.TimePickerDialog;
-import android.text.Editable;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.NumberPicker;
-import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
-import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.provider.ContactsContract.CommonDataKinds.Im;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.TextView;
+import android.widget.Toast;
+import ch.epfl.pokernfc.Logic.PokerObjects;
+import ch.epfl.pokernfc.Logic.VirtualPlayer;
+import ch.epfl.pokernfc.Logic.network.Client;
+import ch.epfl.pokernfc.Logic.network.Message;
+import ch.epfl.pokernfc.Logic.network.NetworkMessageHandler;
+import ch.epfl.pokernfc.Utils.MessageUtils;
+import ch.epfl.pokernfc.Utils.NFCMessageReceivedHandler;
 
 public class PlayerActivity extends PokerActivity {
 
@@ -247,7 +237,7 @@ public class PlayerActivity extends PokerActivity {
 	public void onPayCash(View view) {
 		System.out.println("Player : PAY CASH");
 
-
+		log("I've bid 10.-");
 		//Credit the Pot by 10 chf
 		Client client = PokerState.getGameClient();
 		if ((client != null) && client.sendMessage(new Message(Message.MessageType.BID, String.valueOf(10)))) {
@@ -262,11 +252,11 @@ public class PlayerActivity extends PokerActivity {
 		System.out.println("Player : BID");
 		
 		//TODO what if minbid > maxbid???
-		final int minBid = 0; //should be = to call
-		final int maxBid = (int) PokerObjects.getPlayer().getCash();// all in? equal to pot? depending on rule!
+		final float minBid = PokerObjects.getPlayer().getFolowAmount(); //should be = to call
+		final float maxBid = (int) PokerObjects.getPlayer().getCash();// all in? equal to pot? depending on rule!
 		
 		if(minBid>=maxBid){//only solution is all in
-			final int  bid = maxBid;
+			final float  bid = maxBid;
 			
 			
 			AlertDialog dialog = new AlertDialog.Builder(this).create();
@@ -282,6 +272,7 @@ public class PlayerActivity extends PokerActivity {
 		        public void onClick(DialogInterface dialog, int buttonId) {
 		        	if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(bid)))) {
             			PokerObjects.getPlayer().removeCash(bid);
+            			log("I've bid " + bid + ".-");
             			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
             			Toast.makeText(getApplicationContext(), "All-in placed", Toast.LENGTH_LONG).show();
             		} else {
@@ -328,8 +319,8 @@ public class PlayerActivity extends PokerActivity {
 			                })
 			            .show();
 			    
-			    ((NumberPicker) bidPickerdialog).setMaxValue(maxBid);
-			    ((NumberPicker) bidPickerdialog).setMinValue(minBid);
+			    ((NumberPicker) bidPickerdialog).setMaxValue((int)maxBid);
+			    ((NumberPicker) bidPickerdialog).setMinValue((int)minBid);
 			    ((NumberPicker) bidPickerdialog).setBackgroundColor(Color.BLACK);
 		}
 
@@ -344,6 +335,7 @@ public class PlayerActivity extends PokerActivity {
 		card1.setVisibility(View.VISIBLE);
 		card2.setVisibility(View.VISIBLE);
 		
+		PokerState.getGameClient().sendMessage(new Message(Message.MessageType.FOLD, "0"));
 //		System.out.println("Player : PAY CASH");
 //		card1.setVisibility(View.VISIBLE);
 //		card2.setVisibility(View.VISIBLE);
@@ -356,7 +348,11 @@ public class PlayerActivity extends PokerActivity {
 //		}
 	}
 	public void call(View view) {
-		HideShowCards();
+		
+		PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID,
+				String.valueOf(PokerObjects.getPlayer().getFolowAmount())));
+		
+		
 //		System.out.println("Player : PAY CASH");
 //		card1.setVisibility(View.VISIBLE);
 //		card2.setVisibility(View.VISIBLE);
@@ -448,6 +444,7 @@ public class PlayerActivity extends PokerActivity {
 					case ASKBID:
 						System.out.println("ASKBID");
 						log("BID at least : " + message.getLoad());
+						PokerObjects.getPlayer().setFollowAmount(Float.parseFloat(message.getLoad()));
 						break;
 					case REFUND:
 						float amount = Float.parseFloat(message.getLoad());
