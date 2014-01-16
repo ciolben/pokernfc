@@ -5,6 +5,7 @@ import ch.epfl.pokernfc.Logic.PokerObjects;
 import ch.epfl.pokernfc.Logic.network.Client;
 import ch.epfl.pokernfc.Logic.network.Message;
 import ch.epfl.pokernfc.Logic.network.NetworkMessageHandler;
+import ch.epfl.pokernfc.Logic.network.Message.MessageType;
 import ch.epfl.pokernfc.Utils.MessageUtils;
 import ch.epfl.pokernfc.Utils.NFCMessageReceivedHandler;
 import ch.epfl.pokernfc.Utils.NFCUtils;
@@ -13,11 +14,16 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -36,9 +42,12 @@ public class PlayerActivity extends PokerActivity {
 
 	private NetworkMessageHandler mMsgHandler;
 	private ImageView card1;
-	private ImageView card2;	
-	private Drawable hiddenCard1;
-	private Drawable hiddenCard2;
+	private ImageView card2;
+	private Drawable hiddenCard;
+	private Drawable realCard1;
+	private Drawable realCard2;
+	private Boolean cardVisible = false;
+	private long longpressMs = 2000;
 	private View bidPickerdialog;
 	
 	
@@ -46,12 +55,46 @@ public class PlayerActivity extends PokerActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_player);
-		hiddenCard1= getResources().getDrawable(R.drawable.back_card);
-		hiddenCard2 = getResources().getDrawable(R.drawable.back_card);
+		hiddenCard= getResources().getDrawable(R.drawable.back_card);
 		card1 = (ImageView) findViewById(R.id.playerCard1);
 		card1.setVisibility(View.INVISIBLE);
+		card1.setImageDrawable(hiddenCard);
 		card2 = (ImageView) findViewById(R.id.playerCard2);
+		card2.setImageDrawable(hiddenCard);
 		card2.setVisibility(View.INVISIBLE);
+		
+		
+		//
+		LinearLayout card = (LinearLayout) findViewById(R.id.player_card_layout);
+		card.setOnTouchListener(new OnTouchListener(){
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if(!card1.isShown()){
+					return true;
+				}
+				if(event.getAction() == android.view.MotionEvent.ACTION_DOWN){
+			    	if(!cardVisible){//redundant check enforced to avoid potential bugs
+			    		HideShowCards();
+			    	}
+        			
+			    	
+			    	return true;
+			    }
+				  else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
+				    	if(longpressMs > (event.getEventTime() - event.getDownTime()) && cardVisible){
+				    		HideShowCards();
+				    	} else {
+				    		//longpress don't do anything: keep showing cards
+	            			Toast.makeText(getApplicationContext(), "Card view locked, tap to hide", Toast.LENGTH_LONG).show();
+
+				    	}
+				    } 
+				  return true;
+			}
+			
+		});
+	
 		
 		// Show the Up button in the action bar.
 		setupActionBar();
@@ -159,10 +202,8 @@ public class PlayerActivity extends PokerActivity {
 
 	public void onPayCash(View view) {
 		System.out.println("Player : PAY CASH");
-		card1.setImageResource(R.drawable.card_10_1);
 
-		card1.setVisibility(View.VISIBLE);
-		card2.setVisibility(View.VISIBLE);
+
 		//Credit the Pot by 10 chf
 		Client client = PokerState.getGameClient();
 		if ((client != null) && client.sendMessage(new Message(Message.MessageType.BID, String.valueOf(10)))) {
@@ -252,12 +293,13 @@ public class PlayerActivity extends PokerActivity {
 	
 	public void fold(View view) {
 
-		card1.setImageResource(getResources().
+		realCard1 = getResources().getDrawable(getResources().
 		         getIdentifier("drawable/card_14_4", null, this.getPackageName()));
-		card2.setImageResource(R.drawable.card_2_4);
-
+		realCard2 = getResources().getDrawable(R.drawable.card_2_4);
+	
 		card1.setVisibility(View.VISIBLE);
 		card2.setVisibility(View.VISIBLE);
+		
 //		System.out.println("Player : PAY CASH");
 //		card1.setVisibility(View.VISIBLE);
 //		card2.setVisibility(View.VISIBLE);
@@ -285,13 +327,47 @@ public class PlayerActivity extends PokerActivity {
 	
 	
 	public void HideShowCards(){
-		Drawable temp = hiddenCard1;
-		hiddenCard1 = card1.getDrawable();
-		card1.setImageDrawable(temp);
-		temp = hiddenCard2;
-		hiddenCard2 = card2.getDrawable();
-		card2.setImageDrawable(temp);
+		if(!cardVisible){
+			synchronized (realCard1) {
+				card1.setImageDrawable(realCard1);
+
+			}
+			synchronized (realCard2) {
+				card2.setImageDrawable(realCard2);
+			}
+			cardVisible = true;
+		} else {
+			card1.setImageDrawable(hiddenCard);
+			card2.setImageDrawable(hiddenCard);
+			cardVisible = false;
+		}
 		
+	}
+	
+	public void setCard(final Message m){
+		runOnUiThread(new Runnable() {
+		     @Override
+		     public void run() {
+		switch (m.getType()) {
+		case CARD1:
+			synchronized (realCard1) {
+				realCard1 = getResources().getDrawable(getResources().
+				         getIdentifier("drawable/card_"+m.getLoad(), null,getPackageName()));
+
+			}
+			break;
+		case CARD2:
+			synchronized (realCard2) {
+				realCard2 = getResources().getDrawable(getResources().
+				         getIdentifier("drawable/card_"+m.getLoad(), null,getPackageName()));
+			}
+			break;
+
+		default:
+			break;
+		}
+		     }
+		});
 	}
 	
 	private void log(String text) {
@@ -334,28 +410,8 @@ public class PlayerActivity extends PokerActivity {
 						
 						break;
 					case CARD1:
-						runOnUiThread(new Runnable() {
-						     @Override
-						     public void run() {
-
-						    	 card1.setImageResource(getResources().
-								         getIdentifier("drawable/card_"+message.getLoad(), null, getPackageName()));
-								card1.setVisibility(View.VISIBLE);
-						    }
-						});
-						
-						break;
 					case CARD2:
-						runOnUiThread(new Runnable() {
-						     @Override
-						     public void run() {
-
-						    	 card2.setImageResource(getResources().
-								         getIdentifier("drawable/card_"+message.getLoad(), null, getPackageName()));
-								card2.setVisibility(View.VISIBLE);
-						    }
-						});
-						
+						setCard(message);
 						break;
 					case ERROR:
 						log(message.getLoad());

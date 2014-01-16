@@ -10,14 +10,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:weightSum="100"
     tools:context=".PotActivity" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-       	android:gravity="center_vertical|center_horizontal" >
+        android:layout_height="wrap_content"
+        android:gravity="top|right">
         
-
         <TextView
             android:id="@+id/tvCurrentPot"
             android:layout_width="wrap_content"
@@ -26,13 +26,6 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/white" />
 
-        <TextView
-            android:id="@+id/tvCurrentPot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/textview_currentpot"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/tvValue"
@@ -43,82 +36,103 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="italic" />
 
-        <Space
-            android:layout_width="20sp"
-            android:layout_height="match_parent" />
-
-
+       
     </LinearLayout>
 
     <TextView
-            android:id="@+id/txtStatusPot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:text="Status : nothing to display"
-            android:textColor="@android:color/white" />
-    
+        android:id="@+id/txtStatusPot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"
+        
+        android:text="Status : nothing to display"
+        android:textColor="@android:color/white" />
+
     <Space
         android:layout_width="match_parent"
-        android:layout_height="20sp" />
+                        android:layout_weight="2"
+        
+        android:layout_height="0dip" />
 
-    <GridLayout
-        android:layout_width="287dp"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
         android:layout_gravity="center"
-        android:layout_row="3" >
+        android:layout_weight="70"
+        android:columnCount="5"
+        android:orientation="horizontal"
+        android:weightSum="5" >
 
         <ImageView
             android:id="@+id/potCard1"
-            android:layout_width="57dp"
-            android:layout_height="80dp"
+        android:layout_width="0dip"
+            android:layout_height="match_parent"
             android:layout_gravity="left|top"
             android:scaleType="centerInside"
+                    android:layout_weight="1"
+            
             android:src="@drawable/back_card" />
 
         <ImageView
             android:id="@+id/potCard2"
-            android:layout_width="57dp"
-            android:layout_height="80dp"
+        android:layout_width="0dip"
+                                android:layout_weight="1"
+            
+            android:layout_height="match_parent"
             android:layout_gravity="left|top"
             android:scaleType="centerInside"
             android:src="@drawable/back_card" />
 
         <ImageView
             android:id="@+id/potCard3"
-            android:layout_width="57dp"
-            android:layout_height="80dp"
+        android:layout_width="0dip"
+                            android:layout_weight="1"
+        
+            android:layout_height="match_parent"
             android:layout_gravity="left|top"
             android:scaleType="centerInside"
             android:src="@drawable/back_card" />
 
         <ImageView
             android:id="@+id/potCard4"
-            android:layout_width="57dp"
-            android:layout_height="80dp"
+        android:layout_width="0dip"
+                            android:layout_weight="1"
+        
+            android:layout_height="match_parent"
             android:layout_gravity="left|top"
             android:scaleType="centerInside"
             android:src="@drawable/back_card" />
 
         <ImageView
             android:id="@+id/potCard5"
-            android:layout_width="57dp"
-            android:layout_height="80dp"
+        android:layout_width="0dip"
+                            android:layout_weight="1"
+        
+            android:layout_height="match_parent"
             android:layout_gravity="left|top"
             android:scaleType="centerInside"
             android:src="@drawable/back_card" />
-    </GridLayout>
 
-     <Space
+    </LinearLayout>
+
+
+
+    <LinearLayout
+                android:layout_weight="20"
+        
         android:layout_width="match_parent"
-        android:layout_height="20sp" />
-     
+        android:layout_height="0dip"
+        android:gravity="bottom|left"
+        android:layout_gravity="bottom|center_horizontal"
+         >
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onStartGame"
+        android:layout_height="wrap_content" 
+        android:onClick="onStartGame"     
+        
         android:text="Start Game" />
+        </LinearLayout>
+    
 
 </LinearLayout>
