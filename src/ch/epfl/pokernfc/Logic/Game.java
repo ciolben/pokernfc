@@ -64,7 +64,7 @@ import ch.epfl.pokernfc.Logic.texasholdem.Player;
  */
 public class Game {
 	
-	private final int MAXPLAYER = 12;
+	private final int MAXPLAYER = 22;
 	private int mNumberOfPlayer = 0;
 	private int mLastFreeId = -1; //for speeding up the search for a free id.
 	private HashSet<Integer> mIds; //for O(1) search

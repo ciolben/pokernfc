@@ -1,5 +1,6 @@
 package ch.epfl.pokernfc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.TargetApi;
@@ -214,13 +215,16 @@ initCard();
 		Game game = PokerObjects.getGame();
 		
 		//remove unconnected clients
-		List<Integer> connected = PokerState.getGameServer().getConnectedIds();
-		List<Integer> registered = game.getRegisteredIds();
+		List<Integer> connected = new ArrayList<Integer>(PokerState.getGameServer().getConnectedIds());
+		List<Integer> registered = new ArrayList<Integer>(game.getRegisteredIds());
 		
 		for (Integer id : registered) {
 			if (!connected.contains(id)) {
 				game.revokePlayer(id);
 				System.out.println("PotActivity : removed unconnected player " + id);
+				PokerState.getGameServer().closeConnection(id);
+			} else {
+				System.out.println("PotActivity : player " + id + " connected");
 			}
 		}
 		

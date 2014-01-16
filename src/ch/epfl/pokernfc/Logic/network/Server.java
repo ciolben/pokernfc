@@ -307,6 +307,13 @@ public class Server extends NetworkComponent {
 		return new ArrayList<Integer>(mSockets.keySet());
 	}
 	
+	public void closeConnection(int id) {
+		Connection conn = mSockets.get(id);
+		if (conn != null) {
+			conn.close();
+		}
+	}
+	
 	/**
 	 * Locally send the message to himself.
 	 * @param message

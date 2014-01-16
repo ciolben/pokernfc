@@ -438,9 +438,11 @@ public class PlayerActivity extends PokerActivity {
 						log("Connected to server.");
 						break;
 					case ASKBLIND:
+						System.out.println("ASKBLIND");
 						log("Blind : " + message.getLoad());
 						break;
 					case ASKBID:
+						System.out.println("ASKBID");
 						log("BID at least : " + message.getLoad());
 						break;
 					case REFUND:
