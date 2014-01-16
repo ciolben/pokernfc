@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -62,6 +64,47 @@ public class PlayerActivity extends PokerActivity {
 		card2 = (ImageView) findViewById(R.id.playerCard2);
 		card2.setImageDrawable(hiddenCard);
 		card2.setVisibility(View.INVISIBLE);
+		
+		
+		//handle nfc not available
+		if (mNfcAdapter == null) {
+			Toast.makeText(this, "Sorry, NFC is not available on this device", 
+					Toast.LENGTH_SHORT).show();
+			
+			
+			
+		
+			// Set an EditText view to get user input 			
+			LayoutInflater inflater = (LayoutInflater)
+				    getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			final View connectionSettings    = inflater.inflate(R.layout.connection_dialog, null);
+			connectionSettings.setBackgroundColor(Color.BLACK);
+			
+			new AlertDialog.Builder(this)
+		    .setTitle("Connection:")
+		    .setView(connectionSettings)
+		    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int whichButton) {
+	               String id = ((EditText) connectionSettings.findViewById(R.id.player_id)).getText().toString();
+	               String ip = ((EditText) connectionSettings.findViewById(R.id.pot_ip)).getText().toString();
+	               String port = ((EditText) connectionSettings.findViewById(R.id.pot_port)).getText().toString();
+
+		        	PokerState.createGameClient(Integer.valueOf(id), ip, Integer.valueOf(port));
+					
+					registerMessageHandler();
+		            
+		        }
+		    }).show();
+
+			
+			
+		}
+		
+		
+		
+		
+		
+		
 		
 		
 		//
