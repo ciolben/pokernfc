@@ -93,7 +93,7 @@
         android:layout_height="0dip"
         android:layout_gravity="bottom|left"
         android:gravity="bottom|center_horizontal"
-        android:onClick="" >
+        >
 
         <Button
             android:id="@+id/btPayCash"
