@@ -16,8 +16,10 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import ch.epfl.pokernfc.Logic.Game;
 import ch.epfl.pokernfc.Logic.PokerObjects;
 import ch.epfl.pokernfc.Logic.Pot;
@@ -212,6 +214,13 @@ initCard();
 	}
 	
 	public void onStartGame(View view) {
+		runOnUiThread(new Runnable() {
+			 @Override
+		     public void run() {
+			    	
+					initCard();
+				     }
+					});
 		Game game = PokerObjects.getGame();
 		
 		//remove unconnected clients
@@ -280,6 +289,8 @@ initCard();
 						     public void run() {
 								tempCard.setImageDrawable(getResources().getDrawable(getResources().
 								getIdentifier("drawable/card_"+message.getLoad(), null,getPackageName())));
+		            			Toast.makeText(getApplicationContext(), tempCard.getLayoutParams().height +" "+ tempCard.getLayoutParams().width, Toast.LENGTH_LONG).show();
+								tempCard.getLayoutParams().height = LayoutParams.MATCH_PARENT;
 								tempCard.setVisibility(View.VISIBLE);
 								if(tempCard == card1) tempCard = card2;
 								else if(tempCard == card2) tempCard = card3;
@@ -289,13 +300,7 @@ initCard();
 						});
 						break;
 					case END:
-						runOnUiThread(new Runnable() {
-						     @Override
-						     public void run() {
-						    	
-						initCard();
-					     }
-						});
+						
 						
 					//remove cash from Pot
 					case REFUND:
