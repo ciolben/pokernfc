@@ -22,6 +22,7 @@ import ch.epfl.pokernfc.Logic.PokerObjects;
 import ch.epfl.pokernfc.Logic.Pot;
 import ch.epfl.pokernfc.Logic.network.Message;
 import ch.epfl.pokernfc.Logic.network.NetworkMessageHandler;
+import ch.epfl.pokernfc.Logic.network.Server;
 import ch.epfl.pokernfc.Utils.MessageUtils;
 
 public class PotActivity extends PokerActivity {
@@ -97,12 +98,15 @@ initCard();
 		}
 	}
 	
-	public void onNonNFCClient() {
+	public void onNonNFCClient(View view) {
+		if (mDataToSendBuffer.isEmpty()) {
+			prepareNextWelcomeMessage();
+		}
 		Object[] parsed = MessageUtils.parseNFCWelcomeMessage(mDataToSendBuffer);
 		int wantedID = (Integer) parsed[2];
 		AlertDialog dialog = new AlertDialog.Builder(this).create();
 	    dialog.setTitle("Connect to server");
-	    dialog.setMessage("Use this id : " + wantedID);
+	    dialog.setMessage("Use this id : " + wantedID+"\npot IP: "+PokerState.getGameServer().getServerIP()+"\npot Port: "+PokerState.getGameServer().getServerPort());
 	    dialog.setCancelable(false);
 	    dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int buttonId) {

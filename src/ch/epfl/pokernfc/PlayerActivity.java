@@ -82,15 +82,12 @@ public class PlayerActivity extends PokerActivity {
 			
 			new AlertDialog.Builder(this)
 		    .setTitle("Connection:")
-		    .setMessage("enter ip:port of the pot")
 		    .setView(connectionSettings)
 		    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int whichButton) {
 	               String id = ((EditText) connectionSettings.findViewById(R.id.player_id)).getText().toString();
 	               String ip = ((EditText) connectionSettings.findViewById(R.id.pot_ip)).getText().toString();
 	               String port = ((EditText) connectionSettings.findViewById(R.id.pot_port)).getText().toString();
-
-       			Toast.makeText(getApplicationContext(), Integer.valueOf(id)+" "+ip+" "+Integer.valueOf(port), Toast.LENGTH_LONG).show();
 
 		        	PokerState.createGameClient(Integer.valueOf(id), ip, Integer.valueOf(port));
 					
