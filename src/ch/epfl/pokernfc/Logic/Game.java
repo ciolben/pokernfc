@@ -519,11 +519,13 @@ public class Game {
 					server.localSend(new Message(MessageType.REFUND, "0"));
 					
 					//inform players of the end of the game
+					Message win = new Message(Message.MessageType.END,
+							"Game ended");
 					for (int i = 0; i < mNumberOfPlayer; ++i) {
-						server.sendMessage(mIdsOrder.get(i),
-								new Message(Message.MessageType.END,
-										"Game ended"));
+						server.sendMessage(mIdsOrder.get(i), win);
 					}
+					//inform pot of the end of the game
+					server.localSend(win);
 					
 					mGameEnded  = true;
 					

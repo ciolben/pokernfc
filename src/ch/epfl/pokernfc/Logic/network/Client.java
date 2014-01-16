@@ -9,7 +9,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import ch.epfl.pokernfc.Logic.PokerObjects;
 import ch.epfl.pokernfc.Logic.network.Message.MessageType;
 
 //import android.os.Handler;
@@ -72,15 +71,18 @@ public class Client extends NetworkComponent {
 //					Log.d("ClientActivity", "C: Sent.");
 				} catch (Exception e) {
 //					Log.e("ClientActivity", "S: Error", e);
-					e.printStackTrace();
+					//e.printStackTrace();
+					break;
 				}
 			}
 			mSocket.close();
 			//Log.d("ClientActivity", "C: Closed.");
 		} catch (Exception e) {
 			//Log.e("ClientActivity", "C: Error", e);
-			e.printStackTrace();
+			//e.printStackTrace();
 			mConnected = false;
+		} finally {
+			System.out.println("Disconnected.");
 		}
 	}
 	
