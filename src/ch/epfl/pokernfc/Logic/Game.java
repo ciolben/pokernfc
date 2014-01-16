@@ -399,7 +399,7 @@ public class Game {
 					List<Card> playerHand = new ArrayList<Card>();
 					Card card1 = mDeck.getCards().remove(0);
 					playerHand.add(card1);
-					Player player = mPlayers.get(i);
+					Player player = mPlayers.get(id);
 					player.setHand(playerHand);
 					PokerState.getGameServer().sendMessage(id,
 							new Message(MessageType.CARD1, card1.getValue().getSuitValue()
@@ -408,7 +408,7 @@ public class Game {
 				//second round
 				for (int i = 0; i < mNumberOfPlayer; ++i) {
 					int id = mIdsOrder.get((i + mLastDealer + 1) % mNumberOfPlayer);
-					Player player = mPlayers.get(i);
+					Player player = mPlayers.get(id);
 					List<Card> playerHand = player.getHand();
 					Card card2 = mDeck.getCards().remove(0);
 					playerHand.add(card2);
@@ -546,6 +546,7 @@ public class Game {
 				getNextPlayerID(); //this will ensure that the 1st to play has not fold
 				//reset the bid
 				mCurrentBid = 0;
+				if (!mGameEnded) { bidtour(-1); }
 			} else {
 				System.out.println("current follow : " + mConsecutiveFollow);
 				//save bid for player

@@ -9,7 +9,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_player">Player</string>
     <string name="textview_currentpot">Current Pot :</string>
-    <string name="textview_potvalue">0 CHF</string>
+    <string name="textview_potvalue">0</string>
     <string name="textview_cash">Cash :</string>
     <string name="textview_cashvalue">1000 CHF</string>
     <string name="title_activity_activity_to_service">ActivityToService</string>
