@@ -233,7 +233,7 @@ initCard();
 	}
 	
 	private void log(String text) {
-		((TextView) findViewById(R.id.txtStatusPot)).setText("Status : " + text);
+		updateUiTextView(R.id.txtStatusPot, "Status : " + text);
 	}
 	
 	private void registerMessageHandler() {
