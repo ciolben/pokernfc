@@ -396,6 +396,7 @@ public class PlayerActivity extends PokerActivity {
 			synchronized (realCard1) {
 				realCard1 = getResources().getDrawable(getResources().
 				         getIdentifier("drawable/card_"+m.getLoad(), null,getPackageName()));
+				card1.setImageDrawable(realCard1);
 
 			}
 			break;
@@ -403,6 +404,8 @@ public class PlayerActivity extends PokerActivity {
 			synchronized (realCard2) {
 				realCard2 = getResources().getDrawable(getResources().
 				         getIdentifier("drawable/card_"+m.getLoad(), null,getPackageName()));
+				card2.setImageDrawable(realCard2);
+
 			}
 			break;
 
@@ -414,7 +417,7 @@ public class PlayerActivity extends PokerActivity {
 	}
 	
 	private void log(String text) {
-		((TextView) findViewById(R.id.txtStatusPlayer)).setText("Status : " + text);
+		updateUiTextView(R.id.txtStatusPlayer, text);
 	}
 	
 	private void registerMessageHandler() {
