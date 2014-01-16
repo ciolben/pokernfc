@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.nfc.NdefMessage;
 import android.nfc.NfcEvent;
 import android.os.Build;
@@ -33,6 +34,8 @@ public class PotActivity extends PokerActivity {
 	private ImageView card4;
 	private ImageView card5;
 	private ImageView tempCard;
+	private Drawable hiddenCard;
+
 
 
 	
@@ -40,7 +43,14 @@ public class PotActivity extends PokerActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pot);
-		
+		hiddenCard= getResources().getDrawable(R.drawable.back_card);
+		card1 = (ImageView) findViewById(R.id.potCard1);
+		card2 = (ImageView) findViewById(R.id.potCard2);
+		card3 = (ImageView) findViewById(R.id.potCard3);
+		card4 = (ImageView) findViewById(R.id.potCard4);
+		card5 = (ImageView) findViewById(R.id.potCard5);
+
+
 initCard();
 		
 		// Show the Up button in the action bar.
@@ -271,7 +281,13 @@ initCard();
 						});
 						
 					case END:
+						runOnUiThread(new Runnable() {
+						     @Override
+						     public void run() {
+						    	
 						initCard();
+					     }
+						});
 						
 					//remove cash from Pot
 					case REFUND:
@@ -287,27 +303,19 @@ initCard();
 	}
 	
 	private void initCard(){
-		runOnUiThread(new Runnable() {
-		     @Override
-		     public void run() {
-		    	 card1.setImageDrawable(getResources().getDrawable(R.drawable.back_card));
-		 		card1 = (ImageView) findViewById(R.id.potCard1);
-				card1.setVisibility(View.INVISIBLE);
-				card2 = (ImageView) findViewById(R.id.potCard2);
-		    	 card2.setImageDrawable(getResources().getDrawable(R.drawable.back_card));
-				card2.setVisibility(View.INVISIBLE);
-				card3 = (ImageView) findViewById(R.id.potCard3);
-		    	 card3.setImageDrawable(getResources().getDrawable(R.drawable.back_card));
-				card3.setVisibility(View.INVISIBLE);
-				card4 = (ImageView) findViewById(R.id.potCard4);
-		    	 card4.setImageDrawable(getResources().getDrawable(R.drawable.back_card));
-				card4.setVisibility(View.INVISIBLE);
-				card5 = (ImageView) findViewById(R.id.potCard5);
-		    	 card5.setImageDrawable(getResources().getDrawable(R.drawable.back_card));
-				card5.setVisibility(View.INVISIBLE);
-				
+		card1.setVisibility(View.INVISIBLE);
+		card2.setVisibility(View.INVISIBLE);
+		card3.setVisibility(View.INVISIBLE);
+		card4.setVisibility(View.INVISIBLE);
+		card5.setVisibility(View.INVISIBLE);
+		
+		card1.setImageDrawable(hiddenCard);
+		card2.setImageDrawable(hiddenCard);
+		card3.setImageDrawable(hiddenCard);
+		card4.setImageDrawable(hiddenCard);
+		card5.setImageDrawable(hiddenCard);
+
 				tempCard = card1;
-		     }
-		});
+
 	}
 }
