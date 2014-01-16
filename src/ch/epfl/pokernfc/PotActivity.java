@@ -248,7 +248,7 @@ initCard();
 				public void handleMessage(final Message message) {
 					
 					final Pot pot = PokerObjects.getPot();
-					
+					System.out.println("PotActivity : received message " + message);
 					switch (message.getType()) {
 					case UNKNOWN:
 						/*do nothing*/

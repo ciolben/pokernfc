@@ -58,6 +58,7 @@ public class PlayerActivity extends PokerActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_player);
 		hiddenCard= getResources().getDrawable(R.drawable.back_card);
+		realCard1 = realCard2 = hiddenCard;
 		card1 = (ImageView) findViewById(R.id.playerCard1);
 		card1.setVisibility(View.INVISIBLE);
 		card1.setImageDrawable(hiddenCard);
@@ -396,7 +397,7 @@ public class PlayerActivity extends PokerActivity {
 			synchronized (realCard1) {
 				realCard1 = getResources().getDrawable(getResources().
 				         getIdentifier("drawable/card_"+m.getLoad(), null,getPackageName()));
-				card1.setImageDrawable(realCard1);
+				card1.setVisibility(View.VISIBLE);
 
 			}
 			break;
@@ -404,7 +405,7 @@ public class PlayerActivity extends PokerActivity {
 			synchronized (realCard2) {
 				realCard2 = getResources().getDrawable(getResources().
 				         getIdentifier("drawable/card_"+m.getLoad(), null,getPackageName()));
-				card2.setImageDrawable(realCard2);
+				card2.setVisibility(View.VISIBLE);
 
 			}
 			break;

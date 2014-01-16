@@ -263,6 +263,7 @@ public class Game {
 		}
 		
 		//init state vars
+		mDeck.shuffleDeck();
 		mConsecutiveFollow = 0;
 		mCardsDistributed = false;
 		mGameEnded = false;
@@ -389,24 +390,24 @@ public class Game {
 				mCardsDistributed = true;
 				//first round
 				for (int i = 0; i < mNumberOfPlayer; ++i) {
-					int id = mIdsOrder.get(i + mLastDealer + 1 % mNumberOfPlayer);
+					int id = mIdsOrder.get(i + mLastDealer + 1 % mNumberOfPlayer - 1);
 					List<Card> playerHand = new ArrayList<Card>();
 					Card card1 = mDeck.getCards().remove(0);
 					playerHand.add(card1);
 					Player player = mPlayers.get(i);
 					player.setHand(playerHand);
-					PokerState.getGameClient().sendMessage(
+					PokerState.getGameServer().sendMessage(id,
 							new Message(MessageType.CARD1, card1.getValue().getSuitValue()
 									+ "_" + card1.getSuit().getSuitValue()));
 				}
 				//second round
 				for (int i = 0; i < mNumberOfPlayer; ++i) {
-					int id = mIdsOrder.get(i + mLastDealer % mNumberOfPlayer);
+					int id = mIdsOrder.get(i + mLastDealer % mNumberOfPlayer - 1);
 					Player player = mPlayers.get(i);
 					List<Card> playerHand = player.getHand();
 					Card card2 = mDeck.getCards().remove(0);
 					playerHand.add(card2);
-					PokerState.getGameClient().sendMessage(
+					PokerState.getGameServer().sendMessage(id,
 							new Message(MessageType.CARD2, card2.getValue().getSuitValue()
 									+ "_" + card2.getSuit().getSuitValue()));
 				}

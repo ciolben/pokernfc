@@ -20,7 +20,7 @@ public class PokerState {
 	public static Server getGameServer() { if (gameServer == null) return gameServer = new Server(); return gameServer; }
 	public static Server resetGameServer() { gameServer = null; return getGameServer(); }
 	
-	private static Client gameClient = null;
+	private static Client gameClient;
 	public static Client createGameClient(int id, String ip, int port) { 
 			if (gameClient == null) return gameClient = new Client(id, ip, port); return gameClient;
 	}
