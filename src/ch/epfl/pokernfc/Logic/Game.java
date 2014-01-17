@@ -198,10 +198,10 @@ public class Game {
 		boolean ok = mIds.remove(Integer.valueOf(id));
 		if (ok) {
 			mIdsOrder.remove(Integer.valueOf(id));
+			mForfeited.remove(Integer.valueOf(id));
 			for (int i = 0; i < mPlayers.size(); ++i) {
 				if (Integer.parseInt(mPlayers.get(i).getName()) == id) {
 					mPlayers.remove(i);
-					break;
 				}
 			}
 			mLastFreeId = id;
@@ -229,14 +229,15 @@ public class Game {
 		if (mForfeited.size() == mNumberOfPlayer) { return -1; }
 		
 		++mIterator;
-		if (mIterator == mNumberOfPlayer) {
-			mIterator = 0;
-		}
+		mIterator %= mNumberOfPlayer;
 		
 		//at least one will match before iterator == numberofplayer
 		while (mForfeited.contains(mIdsOrder.get(mIterator))) {
 			++mIterator;
 		}
+		
+		//rescale index
+		mIterator %= mNumberOfPlayer;
 		
 		return mIdsOrder.get(mIterator);
 	}
@@ -284,10 +285,10 @@ public class Game {
 		}
 		
 		//determine who's Dealer...
-		mLastDealer = mLastDealer + 1;
+		mLastDealer = (mLastDealer + 1) % mNumberOfPlayer;
 		
 		//...and the one for the small blind
-		mIterator = mLastDealer + 1;
+		mIterator = (mLastDealer + 1) % mNumberOfPlayer;
 		mCurrentBidType = BIDTYPE.SMALL;
 		
 		//start preflop tour
@@ -332,7 +333,6 @@ public class Game {
 				PokerObjects.getPot().addCash(mBigBlind);
 				//we can proceed to standard bid
 				mCurrentBidType = BIDTYPE.BID;
-				mConsecutiveFollow = 1;
 				//save bid for player
 				addToCurrentPlayerBid(mBigBlind);
 				//move to next player
@@ -421,7 +421,7 @@ public class Game {
 			PokerObjects.getPot().addCash(value);
 			
 			//determine if we need to continue the bidtour
-			if (mConsecutiveFollow == mNumberOfPlayer - mForfeited.size() + 1
+			if (mConsecutiveFollow == mNumberOfPlayer - mForfeited.size()
 					|| mForfeited.size() == mNumberOfPlayer - 1) { //one player left
 				mConsecutiveFollow = 0;
 				//next card or determine winner
@@ -480,9 +480,6 @@ public class Game {
 					System.out.println("Determining who is winner");
 					
 					GameUtils utils = new GameUtils();
-					System.out.println("Create game utils : mDeck size : " + mDeck
-							+ " mPlayers size : " + mPlayers.size() + " mCommunityCards size : "
-							+ mCommunityCards.size());
 					utils.setDeck(mDeck);
 					utils.setPlayers(mPlayers);
 					utils.setCommunityCards(mCommunityCards);

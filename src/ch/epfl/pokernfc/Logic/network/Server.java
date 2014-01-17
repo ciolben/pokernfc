@@ -86,7 +86,7 @@ public class Server extends NetworkComponent {
 						while (connection.messageAvailable() && (line = connection.readLine()) != null) {
 
 
-								System.out.println("server received: "+ line);
+//								System.out.println("server received: "+ line);
 								Message message = new Message(line);
 							if (message.getType() != MessageType.PING) {
 								
@@ -235,7 +235,7 @@ public class Server extends NetworkComponent {
 			}
 			boolean writeOK = false;
 			//write the message:
-			System.out.println("MESSAGE SENT TO " + id + " | content : " + outgoingMsg);
+			//System.out.println("MESSAGE SENT TO " + id + " | content : " + outgoingMsg);
 			writeOK = connection.sendMessage(outgoingMsg);
 			return writeOK;
 

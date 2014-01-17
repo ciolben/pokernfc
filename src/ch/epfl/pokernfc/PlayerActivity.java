@@ -258,7 +258,6 @@ public class PlayerActivity extends PokerActivity {
 		    dialog.setButton(DialogInterface.BUTTON_POSITIVE, "All-in", new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int buttonId) {
 		        	if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(bid)))) {
-            			PokerObjects.getPlayer().removeCash(bid);
             			log("I've bid " + bid + ".-");
             			player.removeCash(bid);
             			TextView tv = (TextView) findViewById(R.id.tvCashValue);
@@ -291,7 +290,6 @@ public class PlayerActivity extends PokerActivity {
 			                int bid;
 			                bid = ((NumberPicker) bidPickerdialog.findViewById(R.id.nbPicker)).getValue();
 			            		if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(bid)))) {
-			            			PokerObjects.getPlayer().removeCash(bid);
 			            			log("I've bid " + bid + ".-");
 			            			player.removeCash(bid);
 			            			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(player.getCash()));
