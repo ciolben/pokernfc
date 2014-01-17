@@ -237,12 +237,16 @@ public class Game {
 		if (mNumberOfPlayer == 0) { return -1; }
 		if (mForfeited.size() == mNumberOfPlayer) { return -1; }
 		
+		//guarantee consistancy
+		mNumberOfPlayer = mIdsOrder.size();
+		
 		++mIterator;
 		mIterator %= mNumberOfPlayer;
 		
 		//at least one will match before iterator == numberofplayer
 		while (mForfeited.contains(mIdsOrder.get(mIterator))) {
 			++mIterator;
+			mIterator %= mNumberOfPlayer;
 		}
 		
 		//rescale index
@@ -304,10 +308,17 @@ public class Game {
 		//start preflop tour
 		mCurrentTour = TOUR.PREFLOP;
 		
+		//recreate players
+		mPlayers.clear();
+		for (int id : mIdsOrder) {
+			mPlayers.add(new Player(String.valueOf(id)));
+		}
+		
 		//distribute roles
 		Server server = PokerState.getGameServer();
 		int counter = 0;
-		for (int id : mIdsOrder) {
+		for (int i = 0; i < mIdsOrder.size(); ++i) {
+			int id = mIdsOrder.get((i + mLastDealer) % mIdsOrder.size());
 			switch (counter) {
 			case 0:
 				server.sendMessage(id, new Message(Message.MessageType.ROLE, "Dealer"));
@@ -520,6 +531,15 @@ public class Game {
 					
 					GameUtils utils = new GameUtils();
 					utils.setDeck(mDeck);
+					//remove fold
+					ArrayList<Player> players = new ArrayList<Player>(mPlayers);
+					for (int fi : mForfeited) {
+						for (Player p : players) {
+							if (Integer.parseInt(p.getName()) == fi) {
+								mPlayers.remove(p);
+							}
+						}
+					}
 					utils.setPlayers(mPlayers);
 					utils.setCommunityCards(mCommunityCards);
 					
@@ -588,7 +608,7 @@ public class Game {
 		return id == getCurrentPlayerID();
 	}
 	
-	private void distributionWait() {
+	private synchronized void distributionWait() {
 		try {
 			this.wait(750);
 		} catch (InterruptedException e) {

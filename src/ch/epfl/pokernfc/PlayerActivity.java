@@ -505,13 +505,21 @@ public class PlayerActivity extends PokerActivity {
 						}
 						break;
 					case END:
-						realCard1 = hiddenCard;
-						realCard2 = hiddenCard;
-						if(cardVisible){
-							HideShowCards();
-						}
-						card1.setVisibility(View.INVISIBLE);
-						card2.setVisibility(View.INVISIBLE);
+						
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								realCard1 = hiddenCard;
+								realCard2 = hiddenCard;
+								if(cardVisible){
+									HideShowCards();
+								}
+								card1.setVisibility(View.INVISIBLE);
+								card2.setVisibility(View.INVISIBLE);
+							}
+						});
+						
 						log(message.getLoad());
 						break;
 					case ERROR:
