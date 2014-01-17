@@ -493,15 +493,15 @@ public class PlayerActivity extends PokerActivity {
 						//if content = 1, block, else unblock
 					case BLOCK:
 						if("1".equals(message.getLoad())){
-							((Button)findViewById(R.id.buttonCall)).setFocusable(false);
-							((Button)findViewById(R.id.buttonFold)).setFocusable(false);
-							((Button)findViewById(R.id.buttonRaise)).setFocusable(false);
-							((Button)findViewById(R.id.btPayCash)).setFocusable(false);
+							((Button)findViewById(R.id.buttonCall)).setClickable(false);
+							((Button)findViewById(R.id.buttonFold)).setClickable(false);
+							((Button)findViewById(R.id.buttonRaise)).setClickable(false);
+							((Button)findViewById(R.id.btPayCash)).setClickable(false);
 						} else {
-							((Button)findViewById(R.id.buttonCall)).setFocusable(true);
-							((Button)findViewById(R.id.buttonFold)).setFocusable(true);
-							((Button)findViewById(R.id.buttonRaise)).setFocusable(true);
-							((Button)findViewById(R.id.btPayCash)).setFocusable(true);
+							((Button)findViewById(R.id.buttonCall)).setClickable(true);
+							((Button)findViewById(R.id.buttonFold)).setClickable(true);
+							((Button)findViewById(R.id.buttonRaise)).setClickable(true);
+							((Button)findViewById(R.id.btPayCash)).setClickable(true);
 						}
 						break;
 					case END:
