@@ -4,18 +4,19 @@ import java.util.ArrayList;
 
 import ch.epfl.pokernfc.Utils.NFCMessageReceivedHandler;
 import ch.epfl.pokernfc.Utils.NFCUtils;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.NfcEvent;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcAdapter.OnNdefPushCompleteCallback;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.app.Activity;
-import android.content.Intent;
 import android.widget.Toast;
 
 public class BeamActivity extends Activity implements CreateNdefMessageCallback, 

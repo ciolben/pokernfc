@@ -290,11 +290,16 @@ initCard();
 						});
 						break;
 					case END:
-						
-						
+						updateUiTextView(R.id.tvValue, String.valueOf(pot.getCash()));
+						log("Game ended.");
+						break;
 					//remove cash from Pot
 					case REFUND:
 						updateUiTextView(R.id.tvValue, String.valueOf(pot.getCash()));
+						break;
+					case ERROR:
+						log(message.getLoad());
+						break;
 					default:
 						break;
 					}

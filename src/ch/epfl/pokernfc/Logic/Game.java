@@ -259,7 +259,10 @@ public class Game {
 	 */
 	public boolean startGame() {
 		if (mNumberOfPlayer < 3) {
-			System.out.println("Number of players less than 3");
+			String strError = "Number of players less than 3";
+			System.out.println(strError);
+			PokerState.getGameServer().localSend(new Message(Message.MessageType.ERROR,
+					strError));
 			//TODO : maybe support 2 players
 			return false;
 		}
@@ -268,6 +271,7 @@ public class Game {
 		}
 		
 		//init state vars
+		mDeck = new Deck();
 		mDeck.shuffleDeck();
 		mConsecutiveFollow = 0;
 		mCardsDistributed = false;
