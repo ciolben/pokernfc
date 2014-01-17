@@ -283,6 +283,7 @@ public class Game {
 		//init state vars
 		mDeck = new Deck();
 		mDeck.shuffleDeck();
+		mCommunityCards.clear();
 		mConsecutiveFollow = 0;
 		mCardsDistributed = false;
 		mGameEnded = false;
@@ -302,6 +303,26 @@ public class Game {
 		
 		//start preflop tour
 		mCurrentTour = TOUR.PREFLOP;
+		
+		//distribute roles
+		Server server = PokerState.getGameServer();
+		int counter = 0;
+		for (int id : mIdsOrder) {
+			switch (counter) {
+			case 0:
+				server.sendMessage(id, new Message(Message.MessageType.ROLE, "Dealer"));
+				break;
+			case 1:
+				server.sendMessage(id, new Message(Message.MessageType.ROLE, "SmallBlind"));
+				break;
+			case 2:
+				server.sendMessage(id, new Message(Message.MessageType.ROLE, "BigBlind"));
+				break;
+			default:
+				server.sendMessage(id, new Message(Message.MessageType.ROLE, "Player"));
+			}
+			++counter;
+		}
 		
 		//will ask small blind first (and so start the state machine)
 		preflop(0);
@@ -363,13 +384,17 @@ public class Game {
 			
 			if (!mCardsDistributed ) {
 				mCardsDistributed = true;
+				Message blockMsg = new Message(Message.MessageType.BLOCK, "1");
+				for (int id : mIdsOrder) {
+					server.sendMessage(id, blockMsg);
+				}
 				//first round
 				for (int i = 0; i < mNumberOfPlayer; ++i) {
 					int id = mIdsOrder.get((i + mLastDealer + 1) % mNumberOfPlayer);
 					List<Card> playerHand = new ArrayList<Card>();
 					Card card1 = mDeck.getCards().remove(0);
 					playerHand.add(card1);
-					//this part would be better as a hashmap
+					//this part would be better with a hashmap
 					Player player = null;
 					for (int j = 0; j < mPlayers.size(); ++j) {
 						if (Integer.parseInt(mPlayers.get(j).getName()) == id) {
@@ -378,9 +403,10 @@ public class Game {
 						}
 					}
 					player.setHand(playerHand);
-					PokerState.getGameServer().sendMessage(id,
+					server.sendMessage(id,
 							new Message(MessageType.CARD1, card1.getValue().getSuitValue()
 									+ "_" + card1.getSuit().getSuitValue()));
+					distributionWait();
 				}
 				//second round
 				for (int i = 0; i < mNumberOfPlayer; ++i) {
@@ -395,11 +421,15 @@ public class Game {
 					List<Card> playerHand = player.getHand();
 					Card card2 = mDeck.getCards().remove(0);
 					playerHand.add(card2);
-					PokerState.getGameServer().sendMessage(id,
+					server.sendMessage(id,
 							new Message(MessageType.CARD2, card2.getValue().getSuitValue()
 									+ "_" + card2.getSuit().getSuitValue()));
+					distributionWait();
 				}
-				
+				Message unblockMsg = new Message(Message.MessageType.BLOCK, "0");
+				for (int id : mIdsOrder) {
+					server.sendMessage(id, unblockMsg);
+				}
 			}
 			
 			//will begin at UTG (Under The Gun position)
@@ -556,6 +586,13 @@ public class Game {
 	 */
 	private boolean checkTurn(int id) {
 		return id == getCurrentPlayerID();
+	}
+	
+	private void distributionWait() {
+		try {
+			this.wait(750);
+		} catch (InterruptedException e) {
+		}
 	}
 	
 	/**

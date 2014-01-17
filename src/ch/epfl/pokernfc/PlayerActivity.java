@@ -453,6 +453,9 @@ public class PlayerActivity extends PokerActivity {
 					case CARD2:
 						setCard(message);
 						break;
+					//if content = 1, block, else unblock
+					case BLOCK:
+						
 					case END:
 						realCard1 = hiddenCard;
 						realCard2 = hiddenCard;
