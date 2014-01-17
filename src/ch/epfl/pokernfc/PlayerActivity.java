@@ -449,6 +449,43 @@ public class PlayerActivity extends PokerActivity {
 						});
 						
 						break;
+					case ROLE:
+						//update view
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								ImageView dealer = (ImageView)findViewById(R.id.dealer);
+								ImageView smallBlind = (ImageView)findViewById(R.id.smallBlind);
+								ImageView bigBlind = (ImageView)findViewById(R.id.bigBlind);
+
+								dealer.setVisibility(View.GONE);
+								bigBlind.setVisibility(View.GONE);
+								smallBlind.setVisibility(View.GONE);
+
+								if("Dealer".equalsIgnoreCase(message.getLoad())){
+									dealer.setVisibility(View.VISIBLE);
+									getActionBar().setTitle(message.getLoad());
+								} else if("SmallBlind".equalsIgnoreCase(message.getLoad())){
+									smallBlind.setVisibility(View.VISIBLE);
+									getActionBar().setTitle(message.getLoad());
+
+								}else if("BigBlind".equalsIgnoreCase(message.getLoad())){
+									bigBlind.setVisibility(View.VISIBLE);
+									getActionBar().setTitle(message.getLoad());
+								}else{
+									getActionBar().setTitle("Player");
+								}
+								
+								  // provide compatibility to all the versions
+
+								
+								
+								
+							}
+						});
+
+						break;
 					case CARD1:
 					case CARD2:
 						setCard(message);
