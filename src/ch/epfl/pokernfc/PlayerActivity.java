@@ -333,7 +333,7 @@ public class PlayerActivity extends PokerActivity {
 		PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID,
 				String.valueOf(amount)));
 		
-		log("I'v bid " + amount + ".-");
+		log("I've bid " + amount + ".-");
 		
 		PokerObjects.getPlayer().removeCash(amount);
 		((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));

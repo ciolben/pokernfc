@@ -85,8 +85,9 @@ public class Server extends NetworkComponent {
 						
 						while (connection.messageAvailable() && (line = connection.readLine()) != null) {
 
-
-//								System.out.println("server received: "+ line);
+								if (!(line.contains("PING") || line.contains("PONG"))) {
+									System.out.println("server received: "+ line);
+								}
 								Message message = new Message(line);
 							if (message.getType() != MessageType.PING) {
 								

@@ -220,6 +220,15 @@ public class Game {
 	}
 	
 	/**
+	 * clear the current player's bid.
+	 */
+	private void clearCurrentPlayerBid() {
+		for (int i = 0; i < mPlayerBids.size(); ++i) {
+			mPlayerBids.set(i, 0.f);
+		}
+	}
+	
+	/**
 	 * Circular list of player, in order they should play.
 	 * Forfeited players are not in the list.
 	 * @return id, or -1 if no player is registered or able to play
@@ -337,7 +346,7 @@ public class Game {
 				addToCurrentPlayerBid(mBigBlind);
 				//move to next player
 				getNextPlayerID();
-				bidtour(-1);
+				preflop(-1);
 			} else {
 				if (value > 0) {
 					server.sendMessage(getCurrentPlayerID(),
@@ -421,9 +430,9 @@ public class Game {
 			PokerObjects.getPot().addCash(value);
 			
 			//determine if we need to continue the bidtour
-			if (mConsecutiveFollow == mNumberOfPlayer - mForfeited.size()
+			if (mConsecutiveFollow == mNumberOfPlayer - mForfeited.size() - 1
 					|| mForfeited.size() == mNumberOfPlayer - 1) { //one player left
-				mConsecutiveFollow = 0;
+				mConsecutiveFollow = -1;
 				//next card or determine winner
 				switch (mCurrentTour) {
 				case PREFLOP:
@@ -517,6 +526,7 @@ public class Game {
 				getNextPlayerID(); //this will ensure that the 1st to play has not fold
 				//reset the bid
 				mCurrentBid = 0;
+				clearCurrentPlayerBid();
 				if (!mGameEnded) { bidtour(-1); }
 			} else {
 				System.out.println("current follow : " + mConsecutiveFollow);
