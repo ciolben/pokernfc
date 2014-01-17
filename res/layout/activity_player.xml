@@ -62,7 +62,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0dip"
         android:layout_gravity="center"
-        android:layout_weight="60"
+        android:layout_weight="70"
         android:columnCount="2"
         android:orientation="horizontal"
         android:weightSum="2"
