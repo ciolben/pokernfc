@@ -16,7 +16,6 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.app.Activity;
 import android.content.Intent;
-import android.widget.EditText;
 import android.widget.Toast;
 
 public class BeamActivity extends Activity implements CreateNdefMessageCallback, 
