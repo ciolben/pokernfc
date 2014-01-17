@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ch.epfl.pokernfc"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="15" />
+
+    <uses-permission android:name="android.permission.NFC" />
+
+    <uses-feature android:name="android.hardware.nfc" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="ch.epfl.pokernfc.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="ch.epfl.pokernfc.PotActivity"
+            android:label="@string/title_activity_pot"
+            android:launchMode="singleInstance"
+            android:parentActivityName="ch.epfl.pokernfc.MainActivity" 
+            android:configChanges="orientation|screenSize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ch.epfl.pokernfc.MainActivity" />
+        </activity>
+        <activity
+            android:name="ch.epfl.pokernfc.PlayerActivity"
+            android:label="@string/title_activity_player"
+            android:launchMode="singleInstance"
+            android:parentActivityName="ch.epfl.pokernfc.MainActivity"
+             android:configChanges="orientation|screenSize" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ch.epfl.pokernfc.MainActivity" />
+        </activity>
+
+        <!-- does not support intent for NFC -->
+        <service
+            android:name="ch.epfl.pokernfc.PokerNFCService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+
+        <!-- will bridge NFC requests to service -->
+        <activity
+            android:name="ch.epfl.pokernfc.ActivityDispatcher"
+            android:label="@string/title_activity_activity_to_service" >
+
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/ch.epfl.pokernfc" />
+            </intent-filter>
+            
+            <!--
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/ch.epfl.pokernfc.tag" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.TAG_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/ch.epfl.pokernfc.tag" />
+            </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name="ch.epfl.pokernfc.BeamActivity"
+            android:label="@string/title_activity_beam" >
+            
+        </activity>
+    </application>
+
+</manifest>
