@@ -316,12 +316,11 @@ public class PlayerActivity extends PokerActivity {
 	
 	public void fold(View view) {
 
-		realCard1 = getResources().getDrawable(getResources().
-		         getIdentifier("drawable/card_14_4", null, this.getPackageName()));
-		realCard2 = getResources().getDrawable(R.drawable.card_2_4);
+		realCard1 = hiddenCard;
+		realCard2 = hiddenCard;
 	
-		card1.setVisibility(View.VISIBLE);
-		card2.setVisibility(View.VISIBLE);
+		card1.setVisibility(View.INVISIBLE);
+		card2.setVisibility(View.INVISIBLE);
 		
 		PokerState.getGameClient().sendMessage(new Message(Message.MessageType.FOLD, "0"));
 		
