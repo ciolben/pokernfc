@@ -42,8 +42,8 @@ public class PlayerActivity extends PokerActivity {
 	private Boolean cardVisible = false;
 	private long longpressMs = 2000;
 	private View bidPickerdialog;
-	
-	
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,48 +56,48 @@ public class PlayerActivity extends PokerActivity {
 		card2 = (ImageView) findViewById(R.id.playerCard2);
 		card2.setImageDrawable(hiddenCard);
 		card2.setVisibility(View.INVISIBLE);
-		
-		
+
+
 		//handle nfc not available
 		if (mNfcAdapter == null) {
 			Toast.makeText(this, "Sorry, NFC is not available on this device", 
 					Toast.LENGTH_SHORT).show();
-			
-			
-			
-		
+
+
+
+
 			// Set an EditText view to get user input 			
 			LayoutInflater inflater = (LayoutInflater)
-				    getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			final View connectionSettings    = inflater.inflate(R.layout.connection_dialog, null);
 			connectionSettings.setBackgroundColor(Color.BLACK);
-			
+
 			new AlertDialog.Builder(this)
-		    .setTitle("Connection:")
-		    .setView(connectionSettings)
-		    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int whichButton) {
-	               String id = ((EditText) connectionSettings.findViewById(R.id.player_id)).getText().toString();
-	               String ip = ((EditText) connectionSettings.findViewById(R.id.pot_ip)).getText().toString();
-	               String port = ((EditText) connectionSettings.findViewById(R.id.pot_port)).getText().toString();
+			.setTitle("Connection:")
+			.setView(connectionSettings)
+			.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					String id = ((EditText) connectionSettings.findViewById(R.id.player_id)).getText().toString();
+					String ip = ((EditText) connectionSettings.findViewById(R.id.pot_ip)).getText().toString();
+					String port = ((EditText) connectionSettings.findViewById(R.id.pot_port)).getText().toString();
 
-		        	PokerState.createGameClient(Integer.valueOf(id), ip, Integer.valueOf(port));
-					
+					PokerState.createGameClient(Integer.valueOf(id), ip, Integer.valueOf(port));
+
 					registerMessageHandler();
-		            
-		        }
-		    }).show();
 
-			
-			
+				}
+			}).show();
+
+
+
 		}
-		
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
+
 		LinearLayout card = (LinearLayout) findViewById(R.id.player_card_layout);
 		card.setOnTouchListener(new OnTouchListener(){
 
@@ -107,80 +107,80 @@ public class PlayerActivity extends PokerActivity {
 					return true;
 				}
 				if(event.getAction() == android.view.MotionEvent.ACTION_DOWN){
-			    	if(!cardVisible){//redundant check enforced to avoid potential bugs
-			    		HideShowCards();
-			    	}
-        			
-			    	
-			    	return true;
-			    }
-				  else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-				    	if(longpressMs > (event.getEventTime() - event.getDownTime()) && cardVisible){
-				    		HideShowCards();
-				    	} else {
-				    		//longpress don't do anything: keep showing cards
-	            			Toast.makeText(getApplicationContext(), "Card view locked, tap to hide", Toast.LENGTH_LONG).show();
+					if(!cardVisible){//redundant check enforced to avoid potential bugs
+						HideShowCards();
+					}
 
-				    	}
-				    } 
-				  return true;
+
+					return true;
+				}
+				else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
+					if(longpressMs > (event.getEventTime() - event.getDownTime()) && cardVisible){
+						HideShowCards();
+					} else {
+						//longpress don't do anything: keep showing cards
+						Toast.makeText(getApplicationContext(), "Card view locked, tap to hide", Toast.LENGTH_LONG).show();
+
+					}
+				} 
+				return true;
 			}
-			
+
 		});
-	
-		
+
+
 		// Show the Up button in the action bar.
 		setupActionBar();
 
-		
+
 
 		System.out.println("PlayerActivity : onCreate");
 
 		PokerObjects.getPlayer().addCash(1000.f);
-		
-    	/*
-    	 * Manage state of the application.
-    	 * If we were in the Player state to Pot state, or the opposite.
-    	 */
-    	
+
+		/*
+		 * Manage state of the application.
+		 * If we were in the Player state to Pot state, or the opposite.
+		 */
+
 
 		PokerState.currentActivityIsPlayer(true);
-		
+
 		// Register the handler for the NFC message received
 		super.registerNFCMessageReceivedHandler(new NFCMessageReceivedHandler() {
-			
+
 			@Override
 			public void handleMessage(String message) {
 				Object[] connectionData = MessageUtils.parseNFCWelcomeMessage(message);
 				System.out.print("PlayerActivity : handleNFCWelcomeMessage\n");
 				if (connectionData != null) {
-				
+
 					String ip = (String) 	connectionData[0];
 					int port = 	(Integer)	connectionData[1];
 					int id = 	(Integer)	connectionData[2];
-		
+
 					//affiche le resultat
 					System.out.println("--> decoded message : \n"
 							+ "[0] \t" + ip
 							+ "[1] \t" + port
 							+ "[2] \t" + id);
-					
+
 					PokerState.createGameClient(id, ip, port);
-					
+
 					registerMessageHandler(); //for receiving news from server
-					
+
 				} else { System.out.println("--> unknown message"); }
 			}});
-		
+
 	}
-	
+
 	@Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);//must store the new intent unless getIntent() will return the old one
-        
-        System.out.println("PlayerActivity : onNewIntent");
-    }
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);//must store the new intent unless getIntent() will return the old one
+
+		System.out.println("PlayerActivity : onNewIntent");
+	}
 
 	/**
 	 * Set up the {@link android.app.ActionBar}, if the API is available.
@@ -234,111 +234,111 @@ public class PlayerActivity extends PokerActivity {
 			log("Server not reachable.");
 		}
 	}
-	
+
 	public void raise(View view) {
 		System.out.println("Player : BID");
 		final VirtualPlayer player = PokerObjects.getPlayer();
-		
+
 		final float minBid = PokerObjects.getPlayer().getFolowAmount(); //should be = to call
 		final float maxBid = (int) PokerObjects.getPlayer().getCash();// all in? equal to pot? depending on rule!
-		
+
 		if(minBid>=maxBid){//only solution is all in
 			final float  bid = maxBid;
-			
-			
+
+
 			AlertDialog dialog = new AlertDialog.Builder(this).create();
-		    dialog.setTitle("All-in?");
-		    dialog.setMessage("Choose to bet all-in or not");
-		    dialog.setCancelable(true);
-		    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int buttonId) {
-		        	
-		        }
-		    });
-		    dialog.setButton(DialogInterface.BUTTON_POSITIVE, "All-in", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int buttonId) {
-		        	if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(bid)))) {
-            			log("I've bid " + bid + ".-");
-            			player.removeCash(bid);
-            			TextView tv = (TextView) findViewById(R.id.tvCashValue);
-            			tv.setText(String.valueOf(player.getCash()));
-            			Toast.makeText(getApplicationContext(), "All-in placed", Toast.LENGTH_LONG).show();
-            		} else {
-            			log("Server not reachable.");
-            		}
-		        }
-		    });
-		    dialog.setIcon(android.R.drawable.ic_dialog_alert);
-		    dialog.show();
+			dialog.setTitle("All-in?");
+			dialog.setMessage("Choose to bet all-in or not");
+			dialog.setCancelable(true);
+			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int buttonId) {
+
+				}
+			});
+			dialog.setButton(DialogInterface.BUTTON_POSITIVE, "All-in", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int buttonId) {
+					if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(bid)))) {
+						log("I've bid " + bid + ".-");
+						player.removeCash(bid);
+						TextView tv = (TextView) findViewById(R.id.tvCashValue);
+						tv.setText(String.valueOf(player.getCash()));
+						Toast.makeText(getApplicationContext(), "All-in placed", Toast.LENGTH_LONG).show();
+					} else {
+						log("Server not reachable.");
+					}
+				}
+			});
+			dialog.setIcon(android.R.drawable.ic_dialog_alert);
+			dialog.show();
 		} else {
-		
-		
-		
-		
-		
-		
-	    LayoutInflater inflater = (LayoutInflater)
-			    getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			    bidPickerdialog = inflater.inflate(R.layout.number_picker_dialog_layout, null);
-			    new AlertDialog.Builder(this)
-			        .setTitle("Place Bid:")
-			        .setView(bidPickerdialog)
-			        .setPositiveButton("Bid",
-			            new DialogInterface.OnClickListener() {
-			                public void onClick(DialogInterface dialog, int whichButton) {
-			                	
-			                int bid;
-			                bid = ((NumberPicker) bidPickerdialog.findViewById(R.id.nbPicker)).getValue();
-			            		if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(bid)))) {
-			            			log("I've bid " + bid + ".-");
-			            			player.removeCash(bid);
-			            			((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(player.getCash()));
-			            			Toast.makeText(getApplicationContext(), "bid of "+bid+" placed", Toast.LENGTH_LONG).show();
-			            		} else {
-			            			log("Server not reachable.");
-			            		}
-			                			
-			                }
-			            })
-			            .setNegativeButton("Cancel",
-			                new DialogInterface.OnClickListener() {
-			                    public void onClick(DialogInterface dialog, int whichButton) {
-			                    }
-			                })
-			            .show();
-			    
-			    ((NumberPicker) bidPickerdialog).setMaxValue((int)maxBid);
-			    ((NumberPicker) bidPickerdialog).setMinValue((int)minBid);
-			    ((NumberPicker) bidPickerdialog).setBackgroundColor(Color.BLACK);
+
+
+
+
+
+
+			LayoutInflater inflater = (LayoutInflater)
+					getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			bidPickerdialog = inflater.inflate(R.layout.number_picker_dialog_layout, null);
+			new AlertDialog.Builder(this)
+			.setTitle("Place Bid:")
+			.setView(bidPickerdialog)
+			.setPositiveButton("Bid",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+
+					int bid;
+					bid = ((NumberPicker) bidPickerdialog.findViewById(R.id.nbPicker)).getValue();
+					if (PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID, String.valueOf(bid)))) {
+						log("I've bid " + bid + ".-");
+						player.removeCash(bid);
+						((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(player.getCash()));
+						Toast.makeText(getApplicationContext(), "bid of "+bid+" placed", Toast.LENGTH_LONG).show();
+					} else {
+						log("Server not reachable.");
+					}
+
+				}
+			})
+			.setNegativeButton("Cancel",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+				}
+			})
+			.show();
+
+			((NumberPicker) bidPickerdialog).setMaxValue((int)maxBid);
+			((NumberPicker) bidPickerdialog).setMinValue((int)minBid);
+			((NumberPicker) bidPickerdialog).setBackgroundColor(Color.BLACK);
 		}
 
 	}
-	
+
 	public void fold(View view) {
 
 		realCard1 = hiddenCard;
 		realCard2 = hiddenCard;
-	
+
 		card1.setVisibility(View.INVISIBLE);
 		card2.setVisibility(View.INVISIBLE);
-		
+
 		PokerState.getGameClient().sendMessage(new Message(Message.MessageType.FOLD, "0"));
-		
+
 		log("I'm forfeited.");
 	}
 	public void call(View view) {
-		
+
 		float amount = PokerObjects.getPlayer().getFolowAmount();
 		PokerState.getGameClient().sendMessage(new Message(Message.MessageType.BID,
 				String.valueOf(amount)));
-		
+
 		log("I've bid " + amount + ".-");
-		
+
 		PokerObjects.getPlayer().removeCash(amount);
 		((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(PokerObjects.getPlayer().getCash()));
 	}
-	
-	
+
+
 	public void HideShowCards(){
 		if(!cardVisible){
 			synchronized (realCard1) {
@@ -354,55 +354,55 @@ public class PlayerActivity extends PokerActivity {
 			card2.setImageDrawable(hiddenCard);
 			cardVisible = false;
 		}
-		
+
 	}
-	
+
 	public void setCard(final Message m){
 		runOnUiThread(new Runnable() {
-		     @Override
-		     public void run() {
-		switch (m.getType()) {
-		case CARD1:
-			synchronized (realCard1) {
-				realCard1 = getResources().getDrawable(getResources().
-				         getIdentifier("drawable/card_"+m.getLoad(), null,getPackageName()));
-				card1.setVisibility(View.VISIBLE);
+			@Override
+			public void run() {
+				switch (m.getType()) {
+				case CARD1:
+					synchronized (realCard1) {
+						realCard1 = getResources().getDrawable(getResources().
+								getIdentifier("drawable/card_"+m.getLoad(), null,getPackageName()));
+						card1.setVisibility(View.VISIBLE);
 
+					}
+					break;
+				case CARD2:
+					synchronized (realCard2) {
+						realCard2 = getResources().getDrawable(getResources().
+								getIdentifier("drawable/card_"+m.getLoad(), null,getPackageName()));
+						card2.setVisibility(View.VISIBLE);
+
+					}
+					break;
+
+				default:
+					break;
+				}
 			}
-			break;
-		case CARD2:
-			synchronized (realCard2) {
-				realCard2 = getResources().getDrawable(getResources().
-				         getIdentifier("drawable/card_"+m.getLoad(), null,getPackageName()));
-				card2.setVisibility(View.VISIBLE);
-
-			}
-			break;
-
-		default:
-			break;
-		}
-		     }
 		});
 	}
-	
+
 	private void log(String text) {
 		updateUiTextView(R.id.txtStatusPlayer, text);
 	}
-	
+
 	private void registerMessageHandler() {
 		if (mMsgHandler == null) {
 			mMsgHandler = new NetworkMessageHandler() {
-				
+
 				/**
 				 * Handle message from Server
 				 * @param message
 				 */
 				@Override
 				public void handleMessage(final Message message) {
-					
+
 					final VirtualPlayer player = PokerObjects.getPlayer();
-					
+
 					switch (message.getType()) {
 					case UNKNOWN:
 						/*do nothing*/
@@ -418,7 +418,7 @@ public class PlayerActivity extends PokerActivity {
 						System.out.println("ASKBID");
 						log("BID at least : " + message.getLoad());
 						runOnUiThread(new Runnable() {
-							
+
 							@Override
 							public void run() {
 								if (Float.valueOf(message.getLoad()) == 0) {
@@ -435,24 +435,24 @@ public class PlayerActivity extends PokerActivity {
 						break;
 					case REFUND:
 						float amount = Float.parseFloat(message.getLoad());
-						
+
 						//update player
 						player.addCash(amount);
-						
+
 						//update view
 						runOnUiThread(new Runnable() {
-							
+
 							@Override
 							public void run() {
 								((TextView) findViewById(R.id.tvCashValue)).setText(String.valueOf(player.getCash()));
 							}
 						});
-						
+
 						break;
 					case ROLE:
 						//update view
 						runOnUiThread(new Runnable() {
-							
+
 							@Override
 							public void run() {
 								ImageView dealer = (ImageView)findViewById(R.id.dealer);
@@ -476,12 +476,12 @@ public class PlayerActivity extends PokerActivity {
 								}else{
 									getActionBar().setTitle("Player");
 								}
-								
-								  // provide compatibility to all the versions
 
-								
-								
-								
+								// provide compatibility to all the versions
+
+
+
+
 							}
 						});
 
@@ -490,9 +490,20 @@ public class PlayerActivity extends PokerActivity {
 					case CARD2:
 						setCard(message);
 						break;
-					//if content = 1, block, else unblock
+						//if content = 1, block, else unblock
 					case BLOCK:
-						
+						if("1".equals(message.getLoad())){
+							((Button)findViewById(R.id.buttonCall)).setFocusable(false);
+							((Button)findViewById(R.id.buttonFold)).setFocusable(false);
+							((Button)findViewById(R.id.buttonRaise)).setFocusable(false);
+							((Button)findViewById(R.id.btPayCash)).setFocusable(false);
+						} else {
+							((Button)findViewById(R.id.buttonCall)).setFocusable(true);
+							((Button)findViewById(R.id.buttonFold)).setFocusable(true);
+							((Button)findViewById(R.id.buttonRaise)).setFocusable(true);
+							((Button)findViewById(R.id.btPayCash)).setFocusable(true);
+						}
+						break;
 					case END:
 						realCard1 = hiddenCard;
 						realCard2 = hiddenCard;
@@ -508,9 +519,9 @@ public class PlayerActivity extends PokerActivity {
 						break;
 					default:
 						break;
-						
+
 					}
-						
+
 				}
 			};
 		}
