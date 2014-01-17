@@ -227,8 +227,8 @@ initCard();
 			}
 		}
 		
-		game.startGame();
 		log("Game started.");
+		game.startGame();
 	}
 	
 	private void log(String text) {

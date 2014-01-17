@@ -20,8 +20,9 @@ public class Message{
 	    REFUND,		//send money back			-->
 	    END,		//signal end of the game	-->
 	    ACK,		//Acknowledgment			-->
-	    ROLE,		//Player role				-->
-	    PING,     //ping to check connection status	<-->
+	    ROLE,		//distribute the roles		-->
+	    BLOCK,		//ask to do nothing			-->
+	    PING,     	//ping to check connection status			<-->
 	    
 	}
 	private static final String SPLITTER = "@";
